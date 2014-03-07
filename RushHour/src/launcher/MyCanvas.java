@@ -1,6 +1,8 @@
 package launcher;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.LayoutManager;
 import java.awt.event.MouseEvent;
 
@@ -12,6 +14,7 @@ public class MyCanvas extends JPanel implements MouseInputListener {
 	public MyCanvas(int w, int h) {
 		super();
 		this.setPreferredSize(new Dimension(w, h));
+		this.setBackground(Color.white);
 	}
 
 	@Override
@@ -42,6 +45,13 @@ public class MyCanvas extends JPanel implements MouseInputListener {
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public void paint(Graphics g){
+		g.setColor(Color.blue);
+		g.fillRect(0, 0, 30, 30);
+		
 	}
 
 	@Override
