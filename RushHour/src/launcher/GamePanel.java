@@ -9,9 +9,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
-public class MyCanvas extends JPanel implements MouseInputListener {
+public class GamePanel extends JPanel implements MouseInputListener {
 
-	public MyCanvas(int w, int h) {
+	public GamePanel(int w, int h) {
 		super();
 		this.setPreferredSize(new Dimension(w, h));
 		this.setBackground(Color.white);

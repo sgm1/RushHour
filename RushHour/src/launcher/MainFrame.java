@@ -14,7 +14,7 @@ public class MainFrame extends JFrame implements Runnable{
 	public MainFrame(){
 		super("Rush Hour");
 		setLayout(new FlowLayout());
-		MyCanvas temp = new MyCanvas(300, 300);// here or run?
+		GamePanel temp = new GamePanel(300, 300);// here or run?
 		add(temp);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
