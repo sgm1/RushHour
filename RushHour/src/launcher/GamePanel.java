@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
 public class GamePanel extends JPanel implements MouseInputListener {
+	CarRect[] cars;
 
 	public GamePanel(int w, int h) {
 		super();
@@ -23,12 +24,10 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 
-		
-		
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {//arrow for hover?
+	public void mouseEntered(MouseEvent e) {// arrow for hover?
 		// TODO Auto-generated method stub
 
 	}
@@ -50,25 +49,20 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		// TODO Auto-generated method stub
 
 	}
-	
-	private class myRect extends Rectangle{
-		Random temp = new Random();
-		public myRect(){
-			super(10, 10, 50, 50);
-		}
-		
-		public void draw(Graphics g){
-			g.setColor(new Color(temp.nextInt(255), temp.nextInt(255), temp.nextInt(255)));
-			g.fillRect(this.x, this.y, this.width, this.height);
-		}
+
+	@Override
+	public void paint(Graphics g) {
+		g.setColor(Color.blue);
+		for (CarRect temp: cars)
+			temp.draw(g);
+
 	}
 	
-	@Override
-	public void paint(Graphics g){
-		g.setColor(Color.blue);
-		myRect temp = new myRect();
-		temp.draw(g);
-		
+	public void setCars(CarRect[] cs, int l){
+		cars = new CarRect[l];
+		for (int i = 0; i < l; i++){
+			cars[i] = cs[i];
+		}
 	}
 
 	@Override
