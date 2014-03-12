@@ -67,11 +67,13 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	@Override
 	public void paint(Graphics g){
 		for(int i=0;i<numCars;i++){
+			Color carColor = cars.get(i).getColor();
 			g.drawRect(cars.get(i).x, cars.get(i).y, cars.get(i).width, cars.get(i).height);
-			g.setColor(cars.get(i).getColor());
+			g.setColor(carColor);
 			g.fillRect(cars.get(i).x, cars.get(i).y, cars.get(i).width, cars.get(i).height);
-			g.setColor(Color.black);
+			g.setColor(new Color(255-carColor.getRed(),255-carColor.getGreen(),255-carColor.getBlue()));
 			g.drawString("" + cars.get(i).getSymbol(),cars.get(i).x + cars.get(i).width/2 - 4, cars.get(i).y + cars.get(i).height/2 + 5);
+			g.setColor(Color.black);
 		}
 	}
 
