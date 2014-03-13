@@ -16,7 +16,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	private int numCars;
 	//private List<CarRect> cars = new ArrayList<CarRect>();
 	private CarRect[] cars;
-	private MouseEvent lastPressEvent;
+	private Point lastPressPoint;
 	private RushHourGame game;//to communicate key events
 								//should communicate on release only
 	private CarRect carPressed;
@@ -52,12 +52,12 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		// TODO Auto-generated method stub
 		CarRect t = onCar(e.getPoint());
 		if (t != null){
-			System.out.println(e.getPoint());
-			lastPressEvent = e;
+			lastPressPoint = new Point(t.x - e.getPoint().x, t.y - e.getPoint().y);
+			
 			carPressed = t;
 		}
 		else {
-			lastPressEvent = null;
+			lastPressPoint = null;
 			carPressed = null;
 		}
 
@@ -74,7 +74,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		lastPressEvent = null;
+		lastPressPoint = null;
 		carPressed = null;
 	}
 
@@ -91,7 +91,9 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
 		if (carPressed != null){
-			carPressed.moveByPoint(e.getPoint());
+			int x =  lastPressPoint.x + e.getPoint().x;
+			int y =  lastPressPoint.y + e.getPoint().y;
+			carPressed.moveByPoint(new Point(x, y));
 			repaint();
 		}
 	}
