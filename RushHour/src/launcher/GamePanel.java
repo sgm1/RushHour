@@ -103,7 +103,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	}
 
 	public void setCars(ArrayList<CarRect> crs) {
-		cars = (CarRect[]) crs.toArray(new CarRect[1]);
+		cars = (CarRect[]) crs.toArray(new CarRect[0]);
 	}
 
 }
