@@ -5,14 +5,16 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.util.*;
 
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
 import logic.RushHourGame;
-
 public class GamePanel extends JPanel implements MouseInputListener {
-	public final int bWidth, bHeight;
+
+	private int numCars;
+	//private List<CarRect> cars = new ArrayList<CarRect>();
 	private CarRect[] cars;
 	private MouseEvent lastPressEvent;
 	private RushHourGame game;//to communicate key events
@@ -21,8 +23,6 @@ public class GamePanel extends JPanel implements MouseInputListener {
 
 	public GamePanel(int w, int h, RushHourGame g) {
 		super();
-		bWidth = w / 6;
-		bHeight = h / 6;
 		game = g;
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
@@ -33,11 +33,10 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {// arrow for hover?
+	public void mouseEntered(MouseEvent e) {//arrow for hover?
 		// TODO Auto-generated method stub
 
 	}
@@ -80,17 +79,11 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	}
 
 	@Override
-	public void paint(Graphics g) {
-		g.setColor(Color.blue);
-		for (CarRect temp: cars)
-			temp.draw(g);
-
-	}
-	
-	public void setCars(CarRect[] cs, int l){
-		cars = new CarRect[l];
-		for (int i = 0; i < l; i++){
-			cars[i] = cs[i];
+	public void paint(Graphics g){
+		g.clearRect(0, 0, this.getWidth(), this.getHeight());
+		
+		for (CarRect t: cars) {
+			t.draw(g);
 		}
 	}
 
@@ -107,6 +100,10 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void setCars(ArrayList<CarRect> crs) {
+		cars = (CarRect[]) crs.toArray(new CarRect[1]);
 	}
 
 }
