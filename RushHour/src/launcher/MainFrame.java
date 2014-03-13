@@ -15,7 +15,7 @@ public class MainFrame extends JFrame implements Runnable{
 	public MainFrame(){
 		super("Rush Hour");
 		setLayout(new FlowLayout());
-		RushHourGame daGame = new RushHourGame(300, 300);
+		RushHourGame daGame = new RushHourGame(300);//constructs square Panel
 		
 		//GamePanel temp = new GamePanel(300, 300);// here or run? 
 							// > Here, but we can make the frame resizeable

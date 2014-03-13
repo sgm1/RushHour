@@ -74,6 +74,12 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
+		if (carPressed != null){
+			int x =  lastPressPoint.x + e.getPoint().x;
+			int y =  lastPressPoint.y + e.getPoint().y;
+			carPressed.dropByPoint(new Point(x, y));
+			repaint();
+		}
 		lastPressPoint = null;
 		carPressed = null;
 	}

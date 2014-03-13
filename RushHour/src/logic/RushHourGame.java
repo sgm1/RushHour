@@ -11,23 +11,28 @@ public class RushHourGame {
 	private GamePanel GUIPanel;
 	private int[][] sector = new int[6][6];//quick look up, initializes to zero
 
-	public RushHourGame(int width, int height){
-		secWidth = width / 6;
-		secHeight = height /6;
-		CarRect car1 = new CarRect(0,0,3,1,'1');
+	public RushHourGame(int width){
+		secWidth = CarRect.size;
+		secHeight = CarRect.size;
+		CarRect car1 = new CarRect(0,0,3,1,0,'1');
 		cars.add(car1);
-		CarRect car2 = new CarRect(2,2,1,2,'2');
+		CarRect car2 = new CarRect(2,2,1,2,1,'2');
 		cars.add(car2);
-		CarRect car3 = new CarRect(3,1,3,1,'3');
+		CarRect car3 = new CarRect(3,1,3,1,0,'3');
 		cars.add(car3);
-		CarRect car4 = new CarRect(5,0,1,1,'4');
+		CarRect car4 = new CarRect(5,0,1,1,2,'4');
 		cars.add(car4);
 		int x, y, w, h;
-		for (int i = 0; i < cars.size(); i++){
+		for (int i = 0; i < cars.size(); i++){//TODO Make this cleaner?
 			x = cars.get(i).x;
 			y = cars.get(i).y;
 			w = cars.get(i).width - 1;// -1 for the int div round off
 			h = cars.get(i).height - 1;// -1 for the int div round off
+
+			if (w  < secWidth && h < secWidth){
+				sector[(x + w) / secWidth][(y + h) / secHeight] = i + 1;
+				w -= secWidth;
+			}
 			
 			//following assumes 1 side will be of width 1
 			while(w > secWidth){
@@ -49,8 +54,10 @@ public class RushHourGame {
 			}
 		}
 		printSectors();
+		
+		//solver(sector);//TODO returns steps
 
-		GUIPanel = new GamePanel(width, height, this);//generate GUI
+		GUIPanel = new GamePanel(width, width, this);//generate GUI
 		GUIPanel.setCars(cars);// make this a constructor param?
 		//pass "cars" and "len" to the GamePanel
 		// update 
