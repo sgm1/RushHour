@@ -80,7 +80,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		if (carPressed != null){
 			int x =  lastPressPoint.x + e.getPoint().x;
 			int y =  lastPressPoint.y + e.getPoint().y;
-			carPressed.dropByPoint(new Point(x, y));
+			carPressed.dropByPoint(new Point(x, y),cars);
 			repaint();
 		}
 		lastPressPoint = null;
@@ -94,7 +94,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 			g.drawLine(CarRect.getTileSize()*i, 0, CarRect.getTileSize()*i, CarRect.getTileSize()*tileHeight);
 		for(int i=0; i<tileHeight+1;i++)
 			g.drawLine(0, CarRect.getTileSize()*i, CarRect.getTileSize()*tileWidth,CarRect.getTileSize()*i);
-		System.out.println("" + cars.length);
+		//System.out.println("" + cars.length);
 		for (CarRect t: cars) {
 			t.draw(g);
 		}
@@ -106,7 +106,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		if (carPressed != null){
 			int x =  lastPressPoint.x + e.getPoint().x;
 			int y =  lastPressPoint.y + e.getPoint().y;
-			carPressed.moveByPoint(new Point(x, y));
+			carPressed.moveByPoint(new Point(x, y),cars);
 			repaint();
 		}
 	}
@@ -127,6 +127,10 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	
 	public static int getTileHeight(){
 		return tileHeight;
+	}
+	
+	public CarRect[] getCars(){
+		return this.cars;
 	}
 
 }

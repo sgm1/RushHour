@@ -9,20 +9,13 @@ public class RushHourGame {
 	private final int secWidth, secHeight;
 	private ArrayList<CarRect> cars = new ArrayList<CarRect>();
 	private GamePanel GUIPanel;
-	private int[][] sector = new int[6][6];//quick look up, initializes to zero
+	private int[][] sector;//quick look up, initializes to zero
 
-	public RushHourGame(int width){
-		CarRect.setTileSize(GamePanel.getTileWidth(),GamePanel.getTileHeight());
+	public RushHourGame(int width, ArrayList<CarRect> carlist){
 		secWidth = CarRect.getTileSize();
 		secHeight = CarRect.getTileSize();
-		CarRect car1 = new CarRect(0,0,3,1,0,'1');
-		cars.add(car1);
-		CarRect car2 = new CarRect(2,2,1,2,1,'2');
-		cars.add(car2);
-		CarRect car3 = new CarRect(3,1,3,1,0,'3');
-		cars.add(car3);
-		CarRect car4 = new CarRect(5,0,1,1,2,'4');
-		cars.add(car4);
+		cars = carlist;
+		sector = new int[GamePanel.getTileWidth()][GamePanel.getTileHeight()];
 		int x, y, w, h;
 		for (int i = 0; i < cars.size(); i++){//TODO Make this cleaner?
 			x = cars.get(i).x;
@@ -65,9 +58,9 @@ public class RushHourGame {
 	}
 
 	private void printSectors(){
-		for (int i = 0; i < 6; ++i){
+		for (int i = 0; i < sector.length; ++i){
 			System.out.println();
-			for (int j = 0; j < 6; ++j){
+			for (int j = 0; j < sector[0].length; ++j){
 				System.out.print(sector[j][i] + " ");
 			}
 		}

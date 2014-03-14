@@ -8,6 +8,7 @@ import java.util.Random;
 
 public class CarRect extends Rectangle {
 	private static int tileDim;
+	private static Rectangle[] borders = new Rectangle[4]; 
 	private static Random temp = new Random();
 	private boolean isGhosting;
 	private Point realPoint;// for ghost
@@ -42,18 +43,23 @@ public class CarRect extends Rectangle {
 
 	}
 
-	public void dropByPoint(Point p) {
-		moveByPoint(p);
+	public void dropByPoint(Point p, CarRect[] cars) {
+		//TODO snap to grid
+		moveByPoint(p, cars);
+		x = ((x + tileDim / 2) / tileDim) * tileDim;
+		y = ((y + tileDim / 2) / tileDim) * tileDim;
 		realPoint = null;
 		isGhosting = false;
 	}
 
-	public void moveByPoint(Point p) {
+	public void moveByPoint(Point p, CarRect[] cars) {
 		// TODO Auto-generated method stub
 		if (!isGhosting) {
 			realPoint = this.getLocation();
 			isGhosting = true;
 		}
+		int tempX = x;
+		int tempY = y;
 		if (moveCapabilites == 0)
 			x = p.x;
 		else if (moveCapabilites == 1)
@@ -64,6 +70,20 @@ public class CarRect extends Rectangle {
 		} else {
 			x = realPoint.x;
 			y = p.y;
+		}
+		double dis = Math.sqrt((tempX - x)*(tempX - x)+(tempY - y)*(tempY - y));
+		
+		for(CarRect t: cars){
+			if ((t != this && this.intersects(t)) || dis > tileDim * 1.5){
+				x = tempX;
+				y = tempY;
+			}
+		}
+		for(Rectangle t: borders){
+			if ((t != this && this.intersects(t)) || dis > tileDim * 1.5){
+				x = tempX;
+				y = tempY;
+			}
 		}
 	}
 
@@ -76,6 +96,10 @@ public class CarRect extends Rectangle {
 			CarRect.tileDim = (MainFrame.getWinWidth()-2)/GamePanel.getTileWidth();
 		else
 			CarRect.tileDim = (MainFrame.getWinHeight()-2)/GamePanel.getTileHeight();
+		borders[0] = new Rectangle(-tileDim, 0, tileDim, MainFrame.getWinHeight());
+		borders[1] = new Rectangle(MainFrame.getWinWidth(), 0, tileDim, MainFrame.getWinHeight());
+		borders[2] = new Rectangle(0, -tileDim, MainFrame.getWinWidth(), tileDim);
+		borders[3] = new Rectangle(0, MainFrame.getWinHeight(), MainFrame.getWinWidth(), tileDim);
 	}
 	
 	public static int getTileSize(){
