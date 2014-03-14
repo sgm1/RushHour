@@ -7,7 +7,7 @@ import java.awt.Rectangle;
 import java.util.Random;
 
 public class CarRect extends Rectangle {
-	public final static int size = 50;
+	private static int tileDim;
 	private static Random temp = new Random();
 	private boolean isGhosting;
 	private Point realPoint;// for ghost
@@ -17,7 +17,7 @@ public class CarRect extends Rectangle {
 	private char symbol;
 
 	public CarRect(int x, int y, int width, int height, int dir, char text) {
-		super(x * size, y * size, width * size, height * size);
+		super(x * tileDim, y * tileDim, width * tileDim, height * tileDim);
 		isGhosting = false;
 		xS = x;
 		yS = y;
@@ -32,8 +32,10 @@ public class CarRect extends Rectangle {
 		g.drawRect(this.x, this.y, this.width, this.height);// why do this?
 		g.setColor(col);
 		g.fillRect(this.x, this.y, this.width, this.height);
-		g.setColor(new Color(255 - col.getRed(), 255 - col.getGreen(),
-				255 - col.getBlue()));
+		if((col.getRed()+col.getGreen()+col.getBlue())/3 > 127)
+				g.setColor(Color.black);
+			else
+				g.setColor(Color.white);
 		g.drawString("" + this.symbol, this.x + this.width / 2 - 4, this.y
 				+ this.height / 2 + 5);
 		g.setColor(Color.black);
@@ -67,5 +69,16 @@ public class CarRect extends Rectangle {
 
 	public char getSymbol() {
 		return this.symbol;
+	}
+	
+	public static void setTileSize(int width, int height){
+		if(width>height)
+			CarRect.tileDim = (MainFrame.getWinWidth()-2)/GamePanel.getTileWidth();
+		else
+			CarRect.tileDim = (MainFrame.getWinHeight()-2)/GamePanel.getTileHeight();
+	}
+	
+	public static int getTileSize(){
+		return tileDim;
 	}
 }
