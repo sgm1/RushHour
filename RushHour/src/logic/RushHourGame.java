@@ -12,8 +12,9 @@ public class RushHourGame {
 	private int[][] sector = new int[6][6];//quick look up, initializes to zero
 
 	public RushHourGame(int width){
-		secWidth = CarRect.size;
-		secHeight = CarRect.size;
+		CarRect.setTileSize(GamePanel.getTileWidth(),GamePanel.getTileHeight());
+		secWidth = CarRect.getTileSize();
+		secHeight = CarRect.getTileSize();
 		CarRect car1 = new CarRect(0,0,3,1,0,'1');
 		cars.add(car1);
 		CarRect car2 = new CarRect(2,2,1,2,1,'2');
@@ -33,7 +34,7 @@ public class RushHourGame {
 				sector[(x + w) / secWidth][(y + h) / secHeight] = i + 1;
 				w -= secWidth;
 			}
-			
+
 			//following assumes 1 side will be of width 1
 			while(w > secWidth){
 				sector[(x + w) / secWidth][(y + h) / secHeight] = i + 1;
@@ -54,7 +55,7 @@ public class RushHourGame {
 			}
 		}
 		printSectors();
-		
+
 		//solver(sector);//TODO returns steps
 
 		GUIPanel = new GamePanel(width, width, this);//generate GUI
@@ -62,7 +63,7 @@ public class RushHourGame {
 		//pass "cars" and "len" to the GamePanel
 		// update 
 	}
-	
+
 	private void printSectors(){
 		for (int i = 0; i < 6; ++i){
 			System.out.println();
@@ -71,7 +72,7 @@ public class RushHourGame {
 			}
 		}
 	}
-	
+
 	public GamePanel getPanel(){
 		return GUIPanel;
 	}
