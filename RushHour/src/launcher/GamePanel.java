@@ -22,11 +22,15 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	private CarRect carPressed;
 	private static int tileWidth=10;
 	private static int tileHeight=10;
+	private static double savedX = -1;
+	private static double savedY = -1;
+	private static int numMoves;
 	
 	public GamePanel(int w, int h, RushHourGame g) {
 		super();
 		game = g;
 		//CarRect.setTileSize(tileWidth,tileHeight);
+		numMoves = 0; savedX = -1; savedY = -1;
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		this.setPreferredSize(new Dimension(w, h));
@@ -56,7 +60,8 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		CarRect t = onCar(e.getPoint());
 		if (t != null){
 			lastPressPoint = new Point(t.x - e.getPoint().x, t.y - e.getPoint().y);
-			
+			savedX = t.getX();
+			savedY = t.getY();
 			carPressed = t;
 		}
 		else {
@@ -81,6 +86,8 @@ public class GamePanel extends JPanel implements MouseInputListener {
 			int x =  lastPressPoint.x + e.getPoint().x;
 			int y =  lastPressPoint.y + e.getPoint().y;
 			carPressed.dropByPoint(new Point(x, y),cars);
+			if(carPressed.getX() != savedX || carPressed.getY() != savedY)
+				numMoves++;
 			repaint();
 		}
 		lastPressPoint = null;
@@ -95,6 +102,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		for(int i=0; i<tileHeight+1;i++)
 			g.drawLine(0, CarRect.getTileSize()*i, CarRect.getTileSize()*tileWidth,CarRect.getTileSize()*i);
 		//System.out.println("" + cars.length);
+		MainFrame.setMoveCounter(numMoves);
 		for (CarRect t: cars) {
 			t.draw(g);
 		}
@@ -131,6 +139,10 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	
 	public CarRect[] getCars(){
 		return this.cars;
+	}
+	
+	public static int getNumMoves(){
+		return numMoves;
 	}
 
 }

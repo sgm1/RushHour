@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import launcher.CarRect;
 import launcher.GamePanel;
+import launcher.MainFrame;
 
 public class RushHourGame {
 	private final int secWidth, secHeight;
@@ -11,7 +12,7 @@ public class RushHourGame {
 	private GamePanel GUIPanel;
 	private int[][] sector;//quick look up, initializes to zero
 
-	public RushHourGame(int width, ArrayList<CarRect> carlist){
+	public RushHourGame(ArrayList<CarRect> carlist){
 		secWidth = CarRect.getTileSize();
 		secHeight = CarRect.getTileSize();
 		cars = carlist;
@@ -51,7 +52,7 @@ public class RushHourGame {
 
 		//solver(sector);//TODO returns steps
 
-		GUIPanel = new GamePanel(width, width, this);//generate GUI
+		GUIPanel = new GamePanel(MainFrame.getWinWidth(), MainFrame.getWinHeight(), this);//generate GUI
 		GUIPanel.setCars(cars);// make this a constructor param?
 		//pass "cars" and "len" to the GamePanel
 		// update 
