@@ -15,17 +15,6 @@ public class RushSolver extends Thread{
 			daMap = gr.clone();
 		}
 		
-		public boolean isMap(int[][] gr){
-			//should safely assume same lengths
-			for (int i = 0; i < gr.length; ++i){
-				for (int j = 0; j < gr[0].length; ++j){
-					if (daMap[i][j] != gr[i][j])
-						return false;
-				}
-			}
-			return true;
-		}
-		
 		@Override
 		public boolean equals(Object other){
 			if (!(other instanceof GridState))
@@ -42,10 +31,6 @@ public class RushSolver extends Thread{
 			return true;
 		}
 		
-		public boolean isMap(GridState other){
-			return isMap(other.daMap);
-		}
-		
 		public int[][] getGrid(){
 			return daMap.clone();
 		}
@@ -53,7 +38,8 @@ public class RushSolver extends Thread{
 
 	/**
 	 * Assume there all pieces has a side
-	 * that is of length 1
+	 * that is of length 1 (working on any size)
+	 * 
 	 * 
 	 * Array of carDirs corresponds to
 	 * the grids (positionValue - 1)
