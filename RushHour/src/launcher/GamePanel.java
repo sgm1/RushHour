@@ -20,8 +20,8 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	private RushHourGame game;//to communicate key events
 								//should communicate on release only
 	private CarRect carPressed;
-	private static int tileWidth=10;
-	private static int tileHeight=10;
+	private static int tileWidth = 10;//uninitialized once we read in files
+	private static int tileHeight = 10;//
 	private static double savedX = -1;
 	private static double savedY = -1;
 	private static int numMoves;
@@ -144,5 +144,12 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	public static int getNumMoves(){
 		return numMoves;
 	}
+	
+	public static void setTileWidth(int width){
+		tileWidth = width;
+	}
 
+	public static void setTileHeight(int height){
+		tileHeight = height;
+	}
 }
