@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.awt.Dimension;
+
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -13,9 +15,9 @@ import launcher.GamePanel;
 import logic.RushHourGame;
 
 public class MainFrame extends JFrame implements Runnable{
-	public static int width = 712; //frame width
+	public static int width = 800; //frame width
 	public static int height = 640; //frame height
-	public static Dimension size = new Dimension(width,height);
+	public static Dimension size;
 	private static int winWidth = 602;
 	private static int winHeight = 602;
 	private static JTextArea moveCounter;
@@ -27,12 +29,13 @@ public class MainFrame extends JFrame implements Runnable{
 
 	public MainFrame(){
 		super("Rush Hour");
+		size = new Dimension(width,height);
 		setLayout(new FlowLayout());
 		CarRect.setTileSize(GamePanel.getTileWidth(),GamePanel.getTileHeight());
 		moveCounter = new JTextArea();
 		moveCounter.setText("Moves: 0");
 		this.setResizable(false);
-		this.setPreferredSize(size);
+		this.setSize(size);
 		moveCounter.setEditable(false);
 		CarRect car1 = new CarRect(0,0,3,1,0,'1');
 		carlist.add(car1);
@@ -43,17 +46,20 @@ public class MainFrame extends JFrame implements Runnable{
 		CarRect car4 = new CarRect(5,0,1,1,2,'4');
 		carlist.add(car4);
 		RushHourGame daGame = new RushHourGame(carlist);
-		add(daGame.getPanel());
-		this.add(moveCounter);
-		moveCounter.setBounds(670, 100, 80, 30);//setBounds not working correctly
+		BorderLayout gameLayout = new BorderLayout();
+		add(daGame.getPanel(), gameLayout.SOUTH);
+		add(moveCounter, gameLayout.NORTH);
+		moveCounter.setPreferredSize(new Dimension(80,20));
 		//TODO: fix bug when moves>=10 and window shifts
-		GamePanel temp = new GamePanel(winWidth, winHeight, daGame);			 
+		GamePanel temp = new GamePanel(winWidth, winHeight, daGame);
+		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}		
 	@Override
 	public void run() {
 		pack();
 		setVisible(true);
+		this.setResizable(false);
 	}
 	
 	public static int getWinWidth(){
@@ -66,5 +72,7 @@ public class MainFrame extends JFrame implements Runnable{
 	
 	public static void setMoveCounter(int numMoves){
 		moveCounter.setText("Moves: " + numMoves);
+		//moveCounter.setText("Moves: 1000");
+		
 	}
 }
