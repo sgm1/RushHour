@@ -1,6 +1,7 @@
 package launcher;
 
 import java.awt.Dimension;
+import java.awt.Rectangle;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
@@ -29,8 +30,9 @@ public class MainFrame extends JFrame implements Runnable{
 	private static boolean closeGame = false;
 	private static int carsMade;
 	private static final char[] extraChars = {'€','ƒ','†','‡','ˆ','‰','Š','‹','Œ','Ž','™','š','›','œ','ž','Ÿ','¡','¢','£','¤','¥','¦','§','©','«','¬','®','¯','°','±','²','³','µ','¶','¹','»','¼','½','¾','¿','À','Ç','È','Ì','Ð','Ñ','Ò','×','Ø','Ù','Ý','Þ','ß','à','æ','ç','è','ì','ð','ñ','ò','÷','ø','ù','…','ý','þ'};
+	//for puzzles with more than 61 pieces
 	private static boolean gameWon = false;
-	
+
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new MainFrame());
 	}
@@ -39,7 +41,7 @@ public class MainFrame extends JFrame implements Runnable{
 		super("Rush Hour");
 		size = new Dimension(width,height);
 		setLayout(null);
-		/*if(levelCount<=numLevels)
+		if(levelCount<=numLevels)
 			readInLevel();
 		else{
 			resetLevels();
@@ -48,23 +50,13 @@ public class MainFrame extends JFrame implements Runnable{
 		if(closeGame){
 			setVisible(false);
 			dispose();
-		}*/
-		//TODO: needs to be tested and possibly fixed
-		CarRect.setTileSize(GamePanel.getTileWidth(),GamePanel.getTileHeight());
+		}
 		moveCounter = new JTextArea();
 		moveCounter.setText("Moves: 0");
 		moveCounter.setPreferredSize(new Dimension(80,20));
 		this.setResizable(false);
 		this.getContentPane().setPreferredSize(size);
 		moveCounter.setEditable(false);
-		CarRect car1 = new CarRect(0,0,3,1,0,'1');
-		carlist.add(car1);
-		CarRect car2 = new CarRect(2,2,1,2,1,'2');
-		carlist.add(car2);
-		CarRect car3 = new CarRect(3,1,3,1,0,'3');
-		carlist.add(car3);
-		CarRect car4 = new CarRect(5,0,1,1,2,'4');
-		carlist.add(car4);
 		RushHourGame daGame = new RushHourGame(carlist);
 		add(daGame.getPanel());
 		daGame.getPanel().setBounds(10,10,602,602);
@@ -88,21 +80,25 @@ public class MainFrame extends JFrame implements Runnable{
 		boolean skipLine = false;
 		carsMade = 0;
 		try {
+			
 			String sCurrentLine;
-			br = new BufferedReader(new FileReader("level" + levelCount + ".txt"));//all text files will be named level1.txt, level2.txt, and so on
-
-			while ((sCurrentLine = br.readLine()) != null && lineCount<1) {//get grid dimensions; close the game if invalid
+			//br = new BufferedReader(new FileReader("level" + levelCount + ".txt"));//all text files should be named level1.txt, level2.txt, and so on
+			//TODO: add a resource loader or some method of getting the file path for each level
+			br = new BufferedReader(new FileReader("C:\\proj3a.data"));//for testing
+			if ((sCurrentLine = br.readLine()) != null) {//get grid dimensions
 				String delims = "[ ]+";
 				String[] tokens = sCurrentLine.split(delims);
+				
 				for(int i = 0; i<tokens.length; i++){
 					if(tokens.length != 2 || !isInteger(tokens[i]) || Integer.parseInt(tokens[i])<1){
-						JOptionPane.showMessageDialog(null,"ERROR: Level " + levelCount + " does not have valid grid dimensions!");
+						System.out.println("ERROR: Level " + levelCount + " does not have valid grid dimensions!\nProgram terminated.");//close the game if grid is invalid
 						quitGame();
 						return;
 					}
 				}
 				GamePanel.setTileWidth(Integer.parseInt(tokens[0]));
 				GamePanel.setTileHeight(Integer.parseInt(tokens[1]));
+				CarRect.setTileSize(GamePanel.getTileWidth(),GamePanel.getTileHeight());
 				lineCount++;
 			}
 
@@ -112,15 +108,14 @@ public class MainFrame extends JFrame implements Runnable{
 				String[] tokens = sCurrentLine.split(delims);
 				for(int i = 0; i<4 ; i++){
 					if(!isInteger(tokens[i]) || tokens.length!=5 || Integer.parseInt(tokens[i])<1){
-						JOptionPane.showMessageDialog(null,"ERROR: Car " + lineCount + " of Level " + levelCount + " does not have valid dimensions!");
+						System.out.println("ERROR: Car on line " + lineCount + " of Level " + levelCount + " does not have valid dimensions!");
 						skipLine = true;
 					}
 				}
 				if(!tokens[4].equals("v") && !tokens[4].equals("h") && !tokens[4].equals("b")){
-					JOptionPane.showMessageDialog(null,"ERROR: Car " + lineCount + " of Level " + levelCount + " does not have a valid movement direction!");
+					System.out.println("ERROR: Car on line " + lineCount + " of Level " + levelCount + " does not have a valid movement direction!");
 					skipLine = true;
 				}
-				//TODO: check for overlap with other rectangles in carlist
 				if(skipLine);
 				else{//add a new CarRect to carlist
 					int dir;
@@ -130,17 +125,39 @@ public class MainFrame extends JFrame implements Runnable{
 						dir = 1;
 					else 
 						dir = 2;
-					CarRect newCar = new CarRect(Integer.parseInt(tokens[0]),Integer.parseInt(tokens[1]),Integer.parseInt(tokens[2]),Integer.parseInt(tokens[3]),dir,getCarText());
-					carlist.add(newCar);
+					CarRect newCar = new CarRect(Integer.parseInt(tokens[0])-1,Integer.parseInt(tokens[1])-1,Integer.parseInt(tokens[2]),Integer.parseInt(tokens[3]),dir,getCarText());
+					for(CarRect t: carlist){//check for collisions with other rectangles already added to carlist
+						if (newCar.intersects(t)){
+							System.out.println("ERROR: Car on line " + lineCount + " of Level " + levelCount + " overlaps another car!");
+							skipLine = true;
+						}
+					}
+					for(Rectangle t: CarRect.getBorders()){//check for the rectangle going off the grid
+						if (newCar.intersects(t)){
+							System.out.println("ERROR: Car on line " + lineCount + " of Level " + levelCount + " is outside of the grid bounds!");
+							skipLine = true;
+						}
+					}
+					if(!skipLine)
+						carlist.add(newCar);
+					else
+						System.out.println("Car on line " + lineCount + " discarded.\n");
 				}
 				lineCount++;
 			}
-
-		} catch (IOException e) {
+			if(lineCount<2){
+				System.out.println("ERROR: Level " + levelCount + " is either empty or does not contain enough information!");
+				quitGame();
+				return;
+			}
+	
+		} catch (IOException e) {//exception handling
 			e.printStackTrace();
 		} finally {
 			try {
-				if (br != null)br.close();
+				if (br != null){
+					br.close();
+				}
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
@@ -149,7 +166,6 @@ public class MainFrame extends JFrame implements Runnable{
 
 	private static char getCarText() {//determines what symbol will be displayed for each car using carsMade
 		char result;
-		
 		if(carsMade == 0)
 			result = 'Z';
 		else if(carsMade<10)
@@ -159,7 +175,7 @@ public class MainFrame extends JFrame implements Runnable{
 		else if(carsMade<61)
 			result = (char)(carsMade + 29);
 		else 
-			result = extraChars[carsMade-61];
+			result = extraChars[carsMade-61 % extraChars.length];//allows for an infinite number of pieces w/ duplicate symbols for carsMade > 128
 		carsMade++;
 		return result;
 	}
@@ -171,8 +187,10 @@ public class MainFrame extends JFrame implements Runnable{
 			setVisible(false);
 			dispose();
 		}
+		System.out.println(gameWon);
 		if(gameWon){
 			//render last move, display appropriate message, and initialize the next level
+			gameWon = false;
 		}
 		setVisible(true);
 		this.setResizable(false);
@@ -189,19 +207,24 @@ public class MainFrame extends JFrame implements Runnable{
 	public static void setMoveCounter(int numMoves){//updates the move counter in the GUI
 		moveCounter.setText("Moves: " + numMoves);
 	}
-	
-	private void newLevel(){//read in the next level file and reset variables
+
+	public void newLevel(){//read in the next level file and reset variables
 		levelCount++;//check if we've exhausted all our levels
 		carsMade = 0;
+		
 		//new super("Rush Hour");//might or might not need this
+		// TODO
 	}
 
 	private void resetLevels() {//after levels have been exhausted, start from the beginning
 		// TODO Auto-generated method stub
-
 	}
 
 	public static void quitGame(){
 		closeGame = true;
+	}
+	
+	public static void puzzleSolved(){
+		gameWon = true;
 	}
 }

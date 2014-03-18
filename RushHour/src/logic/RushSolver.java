@@ -7,15 +7,15 @@ public class RushSolver extends Thread{
 	private static int[] dirs;
 	private static HashMap<GridState, GridState> states;//k = curSate, v = Hint
 	private static LinkedList<GridState> toProcess;
-	
+
 	private static class GridState{//int[][] wrapper
 		private final int [][] daMap;
 		private int stepsToEnd;
-		
+
 		public GridState(int [][] gr){
 			daMap = gr.clone();
 		}
-		
+
 		@Override
 		public boolean equals(Object other){
 			if (!(other instanceof GridState))
@@ -31,7 +31,7 @@ public class RushSolver extends Thread{
 			}
 			return true;
 		}
-		
+
 		public int[][] getGrid(){
 			return daMap.clone();
 		}
@@ -59,14 +59,14 @@ public class RushSolver extends Thread{
 		toProcess = new LinkedList<GridState>();
 		toProcess.addFirst(new GridState(initGrid));
 	}
-	
+
 	@Override
 	public void run(){
 		while(!toProcess.isEmpty()){
 			enumerate(toProcess.removeLast().getGrid());//clone does deep copy
 		}
 	}
-	
+
 	/**
 	 * Provided the top right sector of the value 'val',
 	 * decides if piece can move 'num' spaces 
@@ -97,27 +97,27 @@ public class RushSolver extends Thread{
 		}
 		return false;//else can't move, base case 2
 	}
-	
+
 	private void tryMoveLeft(int[][] gr, int val, int x, int y, int dir){
 		if (dir == 1)//vert
 			return;
-		
+
 		// move down to check width
 	}
-	
+
 	private void tryMoveRight(int[][] gr, int val, int x, int y, int dir){
 		if (dir == 1)
 			return;
 		// parse right
 		// move down to check width
 	}
-	
+
 	private void tryMoveUp(int[][] gr, int val, int x, int y, int dir){
 		if (dir == 0)
 			return;
 		// move right to check width
 	}
-	
+
 	private void tryMoveDown(int[][] gr, int val, int x, int y, int dir){
 		if (dir == 0)
 			return;
@@ -141,7 +141,7 @@ public class RushSolver extends Thread{
 				}
 			}
 		}
-		
+
 	}
 
 }

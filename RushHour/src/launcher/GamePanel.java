@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.*;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
@@ -18,18 +19,17 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	private CarRect[] cars = new CarRect[0];
 	private Point lastPressPoint;
 	private RushHourGame game;//to communicate key events
-								//should communicate on release only
+	//should communicate on release only
 	private CarRect carPressed;
 	private static int tileWidth = 10;//uninitialized once we read in files
 	private static int tileHeight = 10;//
 	private static double savedX = -1;
 	private static double savedY = -1;
 	private static int numMoves;
-	
+
 	public GamePanel(int w, int h, RushHourGame g) {
 		super();
 		game = g;
-		//CarRect.setTileSize(tileWidth,tileHeight);
 		numMoves = 0; savedX = -1; savedY = -1;
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
@@ -39,24 +39,21 @@ public class GamePanel extends JPanel implements MouseInputListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {//arrow for hover?
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
 		CarRect t = onCar(e.getPoint());
 		if (t != null){
 			lastPressPoint = new Point(t.x - e.getPoint().x, t.y - e.getPoint().y);
@@ -70,7 +67,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		}
 
 	}
-	
+
 	private CarRect onCar(Point p){
 		for (CarRect t: cars){
 			if (t.contains(p))
@@ -81,7 +78,6 @@ public class GamePanel extends JPanel implements MouseInputListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 		if (carPressed != null){
 			int x =  lastPressPoint.x + e.getPoint().x;
 			int y =  lastPressPoint.y + e.getPoint().y;
@@ -101,16 +97,17 @@ public class GamePanel extends JPanel implements MouseInputListener {
 			g.drawLine(CarRect.getTileSize()*i, 0, CarRect.getTileSize()*i, CarRect.getTileSize()*tileHeight);
 		for(int i=0; i<tileHeight+1;i++)
 			g.drawLine(0, CarRect.getTileSize()*i, CarRect.getTileSize()*tileWidth,CarRect.getTileSize()*i);
-		//System.out.println("" + cars.length);
 		MainFrame.setMoveCounter(numMoves);
 		for (CarRect t: cars) {
 			t.draw(g);
+		}
+		if((int)(cars[0].getX() + cars[0].getWidth()) == CarRect.getTileSize() * tileWidth){
+			JOptionPane.showMessageDialog(null,"CONGRATULATIONS! YOU WON! CLICK 'OK' TO CLAIM YOUR PRIZE.");
 		}
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
 		if (carPressed != null){
 			int x =  lastPressPoint.x + e.getPoint().x;
 			int y =  lastPressPoint.y + e.getPoint().y;
@@ -121,30 +118,29 @@ public class GamePanel extends JPanel implements MouseInputListener {
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void setCars(ArrayList<CarRect> crs) {
 		cars = (CarRect[]) crs.toArray(new CarRect[0]);
 	}
-	
+
 	public static int getTileWidth(){
 		return tileWidth;
 	}
-	
+
 	public static int getTileHeight(){
 		return tileHeight;
 	}
-	
+
 	public CarRect[] getCars(){
 		return this.cars;
 	}
-	
+
 	public static int getNumMoves(){
 		return numMoves;
 	}
-	
+
 	public static void setTileWidth(int width){
 		tileWidth = width;
 	}

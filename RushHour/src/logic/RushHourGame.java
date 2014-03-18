@@ -60,7 +60,8 @@ public class RushHourGame {
 
 	private void printSectors(){
 		for (int i = 0; i < sector.length; ++i){
-			System.out.println();
+			if(i>0)
+				System.out.println();
 			for (int j = 0; j < sector[0].length; ++j){
 				System.out.print(sector[j][i] + " ");
 			}

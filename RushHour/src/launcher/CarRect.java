@@ -28,15 +28,12 @@ public class CarRect extends Rectangle {
 	}
 
 	public void draw(Graphics g) {
-		// g.setColor(col);
-		// g.fillRect(this.x, this.y, this.width, this.height);
-		g.drawRect(this.x, this.y, this.width, this.height);// why do this?
 		g.setColor(col);
 		g.fillRect(this.x, this.y, this.width, this.height);
 		if((col.getRed()+col.getGreen()+col.getBlue())/3 > 127)
-				g.setColor(Color.black);
-			else
-				g.setColor(Color.white);
+			g.setColor(Color.black);
+		else
+			g.setColor(Color.white);
 		g.drawString("" + this.symbol, this.x + this.width / 2 - 4, this.y
 				+ this.height / 2 + 5);
 		g.setColor(Color.black);
@@ -44,7 +41,6 @@ public class CarRect extends Rectangle {
 	}
 
 	public void dropByPoint(Point p, CarRect[] cars) {
-		//TODO snap to grid
 		moveByPoint(p, cars);
 		x = ((x + tileDim / 2) / tileDim) * tileDim;
 		y = ((y + tileDim / 2) / tileDim) * tileDim;
@@ -53,7 +49,6 @@ public class CarRect extends Rectangle {
 	}
 
 	public void moveByPoint(Point p, CarRect[] cars) {
-		// TODO Auto-generated method stub
 		if (!isGhosting) {
 			realPoint = this.getLocation();
 			isGhosting = true;
@@ -72,7 +67,7 @@ public class CarRect extends Rectangle {
 			y = p.y;
 		}
 		double dis = Math.sqrt((tempX - x)*(tempX - x)+(tempY - y)*(tempY - y));
-		
+
 		for(CarRect t: cars){
 			if ((t != this && this.intersects(t)) || dis > tileDim * 1.5){
 				x = tempX;
@@ -90,7 +85,7 @@ public class CarRect extends Rectangle {
 	public char getSymbol() {
 		return this.symbol;
 	}
-	
+
 	public static void setTileSize(int width, int height){
 		if(width>height)
 			CarRect.tileDim = (MainFrame.getWinWidth()-2)/GamePanel.getTileWidth();
@@ -101,8 +96,12 @@ public class CarRect extends Rectangle {
 		borders[2] = new Rectangle(0, -tileDim, MainFrame.getWinWidth(), tileDim);
 		borders[3] = new Rectangle(0, MainFrame.getWinHeight(), MainFrame.getWinWidth(), tileDim);
 	}
-	
+
 	public static int getTileSize(){
 		return tileDim;
+	}
+	
+	public static Rectangle[] getBorders(){
+		return borders;
 	}
 }
