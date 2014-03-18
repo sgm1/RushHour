@@ -228,6 +228,8 @@ public class MainFrame extends JFrame implements Runnable{
 			}
 		}
 		this.remove(daGame.getPanel());
+		carlist = new ArrayList<CarRect>();
+		readInLevel();//TODO might be different later
 		daGame = new RushHourGame(carlist);
 		this.add(daGame.getPanel());
 		daGame.getPanel().setBounds(10,10,602,602);
