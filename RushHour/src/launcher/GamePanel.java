@@ -101,10 +101,11 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		for (CarRect t: cars) {
 			t.draw(g);
 		}
-		//if((int)(cars[0].getX() + cars[0].getWidth()) == CarRect.getTileSize() * tileWidth){
+		//if((int)(cars[0].getX() + cars[0].getWidth()) == CarRect.getTileSize() * tileWidth && gameRunning){
 		//	JOptionPane.showMessageDialog(null,"CONGRATULATIONS! YOU WON! CLICK 'OK' TO CLAIM YOUR PRIZE.");
 		//}
 	}
+	
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
@@ -139,6 +140,10 @@ public class GamePanel extends JPanel implements MouseInputListener {
 
 	public static int getNumMoves(){
 		return numMoves;
+	}
+	
+	public static void resetNumMoves(){
+		numMoves = 0;
 	}
 
 	public static void setTileWidth(int width){

@@ -66,6 +66,7 @@ public class RushHourGame {
 				System.out.print(sector[j][i] + " ");
 			}
 		}
+		System.out.println();
 	}
 
 	public GamePanel getPanel(){

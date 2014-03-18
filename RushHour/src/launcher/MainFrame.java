@@ -35,6 +35,7 @@ public class MainFrame extends JFrame implements Runnable{
 	private static int levelCount = 1;
 	private static boolean closeGame = false;
 	private static int carsMade;
+	private static RushHourGame daGame;
 	private static final char[] extraChars = {'€','ƒ','†','‡','ˆ','‰','Š','‹','Œ','Ž','™','š','›','œ','ž','Ÿ','¡','¢','£','¤','¥','¦','§','©','«','¬','®','¯','°','±','²','³','µ','¶','¹','»','¼','½','¾','¿','À','Ç','È','Ì','Ð','Ñ','Ò','×','Ø','Ù','Ý','Þ','ß','à','æ','ç','è','ì','ð','ñ','ò','÷','ø','ù','…','ý','þ'};
 	//for puzzles with more than 61 pieces
 	private static boolean gameWon = false;
@@ -47,6 +48,8 @@ public class MainFrame extends JFrame implements Runnable{
 		super("Rush Hour");
 		size = new Dimension(width,height);
 		setLayout(null);
+		GameMenu gm = new GameMenu(this);
+		setJMenuBar(gm);
 		if(levelCount<=numLevels)
 			readInLevel();
 		else{
@@ -63,11 +66,13 @@ public class MainFrame extends JFrame implements Runnable{
 		this.setResizable(false);
 		this.getContentPane().setPreferredSize(size);
 		moveCounter.setEditable(false);
-		RushHourGame daGame = new RushHourGame(carlist);
+		daGame = new RushHourGame(carlist);
 		add(daGame.getPanel());
 		daGame.getPanel().setBounds(10,10,602,602);
-		moveCounter.setBounds(620,80,80,20);
+		moveCounter.setBounds(620,100,80,20);
 		add(moveCounter);
+		add(gm.resetButt);
+		gm.resetButt.setBounds(620,20,80,25);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}	
 
@@ -87,9 +92,7 @@ public class MainFrame extends JFrame implements Runnable{
 		carsMade = 0;
 		try {
 			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("proj3a.data"));
-			//System.out.println(ClassLoader.getSystemResource("resources").getPath());
 			String sCurrentLine;
-			//InputStreamReader inStreamReader = new InputStreamReader(temasdp);
 			br = new BufferedReader(temp);
 			if ((sCurrentLine = br.readLine()) != null) {//get grid dimensions
 				String delims = "[ ]+";
@@ -193,7 +196,6 @@ public class MainFrame extends JFrame implements Runnable{
 			setVisible(false);
 			dispose();
 		}
-		System.out.println(gameWon);
 		if(gameWon){
 			//render last move, display appropriate message, and initialize the next level
 			gameWon = false;
@@ -214,15 +216,26 @@ public class MainFrame extends JFrame implements Runnable{
 		moveCounter.setText("Moves: " + numMoves);
 	}
 
-	public void newLevel(){//read in the next level file and reset variables
-		levelCount++;//check if we've exhausted all our levels
-		carsMade = 0;
-		
-		//new super("Rush Hour");//might or might not need this
+	public void newLevel(boolean reset){//read in the next level file and reset variables
+		if(!reset){
+			if(levelCount <= numLevels){//check if we've exhausted all our levels
+				levelCount++;
+				
+			}
+			else{
+				resetLevels();
+				return;
+			}
+		}
+		this.remove(daGame.getPanel());
+		daGame = new RushHourGame(carlist);
+		this.add(daGame.getPanel());
+		daGame.getPanel().setBounds(10,10,602,602);
+		GamePanel.resetNumMoves();
 		// TODO
 	}
 
-	private void resetLevels() {//after levels have been exhausted, start from the beginning
+	private static void resetLevels() {//after levels have been exhausted, start from the beginning
 		// TODO Auto-generated method stub
 	}
 
