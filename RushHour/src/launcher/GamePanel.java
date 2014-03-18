@@ -101,9 +101,9 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		for (CarRect t: cars) {
 			t.draw(g);
 		}
-		if((int)(cars[0].getX() + cars[0].getWidth()) == CarRect.getTileSize() * tileWidth){
-			JOptionPane.showMessageDialog(null,"CONGRATULATIONS! YOU WON! CLICK 'OK' TO CLAIM YOUR PRIZE.");
-		}
+		//if((int)(cars[0].getX() + cars[0].getWidth()) == CarRect.getTileSize() * tileWidth){
+		//	JOptionPane.showMessageDialog(null,"CONGRATULATIONS! YOU WON! CLICK 'OK' TO CLAIM YOUR PRIZE.");
+		//}
 	}
 
 	@Override

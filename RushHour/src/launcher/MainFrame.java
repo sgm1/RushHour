@@ -2,6 +2,7 @@ package launcher;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
@@ -10,8 +11,13 @@ import javax.swing.SwingUtilities;
 
 import java.util.ArrayList;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import launcher.GamePanel;
 import logic.RushHourGame;
@@ -80,11 +86,11 @@ public class MainFrame extends JFrame implements Runnable{
 		boolean skipLine = false;
 		carsMade = 0;
 		try {
-			
+			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("proj3a.data"));
+			//System.out.println(ClassLoader.getSystemResource("resources").getPath());
 			String sCurrentLine;
-			//br = new BufferedReader(new FileReader("level" + levelCount + ".txt"));//all text files should be named level1.txt, level2.txt, and so on
-			//TODO: add a resource loader or some method of getting the file path for each level
-			br = new BufferedReader(new FileReader("C:\\proj3a.data"));//for testing
+			//InputStreamReader inStreamReader = new InputStreamReader(temasdp);
+			br = new BufferedReader(temp);
 			if ((sCurrentLine = br.readLine()) != null) {//get grid dimensions
 				String delims = "[ ]+";
 				String[] tokens = sCurrentLine.split(delims);
