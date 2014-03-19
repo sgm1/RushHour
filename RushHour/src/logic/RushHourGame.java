@@ -52,10 +52,8 @@ public class RushHourGame {
 
 		//solver(sector);//TODO returns steps
 
-		GUIPanel = new GamePanel(MainFrame.getWinWidth(), MainFrame.getWinHeight(), this);//generate GUI
-		GUIPanel.setCars(cars);// make this a constructor param?
-		//pass "cars" and "len" to the GamePanel
-		// update 
+		GUIPanel = new GamePanel(MainFrame.getWinWidth(), MainFrame.getWinHeight(), this);
+		GUIPanel.setCars(cars);
 	}
 
 	private void printSectors(){

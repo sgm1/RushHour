@@ -85,7 +85,7 @@ public class MainFrame extends JFrame implements Runnable{
 		return true;
 	}
 
-	private static void readInLevel() {//read in from file and initialize grid/cars
+	private void readInLevel() {//read in from file and initialize grid/cars
 		BufferedReader br = null;
 		int lineCount = 0;
 		boolean skipLine = false;
@@ -193,8 +193,7 @@ public class MainFrame extends JFrame implements Runnable{
 	public void run() {
 		pack();
 		if(closeGame){
-			setVisible(false);
-			dispose();
+			
 		}
 		if(gameWon){
 			//render last move, display appropriate message, and initialize the next level
@@ -241,8 +240,9 @@ public class MainFrame extends JFrame implements Runnable{
 		// TODO Auto-generated method stub
 	}
 
-	public static void quitGame(){
-		closeGame = true;
+	public void quitGame(){
+		setVisible(false);
+		dispose();
 	}
 	
 	public static void puzzleSolved(){
