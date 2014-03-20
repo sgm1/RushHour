@@ -2,21 +2,31 @@ package logic;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public class RushSolver extends Thread{
 	private static int[] dirs;
-	private static HashMap<GridState, GridState> states;//k = curSate, v = Hint
+	private static HashSet<GridState> states;//
 	private static LinkedList<GridState> toProcess;
 	
 	private static class GridState {
 		private int [][] daMap;
+		private int hashVal;
 		private HashMap<Point, GridState> neighbors;
 		private int stepsToEnd;
 
 		public GridState(int [][] gr){
-			daMap = gr.clone();
+			daMap = clone2D(gr);
 			neighbors = new HashMap<Point, GridState>();
+			int count = 0;
+			for (int i = 0; i < daMap.length; ++i){
+				for (int j = 0; j < daMap[0].length; ++j){
+					hashVal += count * daMap[i][j];
+					count++;
+					hashVal %= Integer.MAX_VALUE / 4;
+				}
+			}
 		}
 
 		@Override
@@ -28,11 +38,17 @@ public class RushSolver extends Thread{
 			GridState o = (GridState)other;
 			for (int i = 0; i < daMap.length; i++) {
 				for (int j = 0; j < daMap[0].length; j++) {
-					if (o.daMap[i][j] == daMap[i][j])
+					if (o.daMap[i][j] != daMap[i][j]){
 						return false;
+					}
 				}
 			}
 			return true;
+		}
+		
+		@Override
+		public int hashCode(){
+			return hashVal;
 		}
 
 		public int[][] getGrid(){
@@ -81,6 +97,7 @@ public class RushSolver extends Thread{
 		}
 		if (dirs[1] == 1)//sanity check
 			throw new IllegalArgumentException("First block must be able to move right");
+		states = new HashSet<GridState>();
 		toProcess = new LinkedList<GridState>();
 		toProcess.addFirst(new GridState(initGrid));
 	}
@@ -148,6 +165,7 @@ public class RushSolver extends Thread{
 	private boolean canMoveRight(int[][] gr, int val, int x, int y, int num){
 		//assumes top left provided
 		//assumes lower "nums" checked
+		//TODO Fix move right
 		if (num < 1)
 			return false;//sanity check
 		if (x + 1 >= gr.length)//starting at edge
@@ -155,7 +173,7 @@ public class RushSolver extends Thread{
 		while (gr[x + 1][y] == val){ // too far left in block
 			++x;// traverse right
 			if (x == gr.length - 1)//reached edge
-				break;
+				return false;
 		}
 		if (x + num >= gr.length)//too long a stride
 			return false;
@@ -163,6 +181,8 @@ public class RushSolver extends Thread{
 
 		if (y == gr[0].length - 1)
 			return gr[x + num][y] == 0;
+		if (gr[x + num][y] != 0)
+			return false;
 		while (gr[x][y + 1] == val){//there is another row
 			y++;
 			if (gr[x + num][y] != 0)
@@ -174,16 +194,33 @@ public class RushSolver extends Thread{
 	}
 	
 	private boolean canMoveDown(int[][] gr, int val, int x, int y, int num){
+		//TODO This might be wrong, based on try
+		/*
+		 *
+In tryMoveUp...
+
+0 1 0 0 
+0 1 0 0 
+0 0 0 0 
+0 0 0 0 
+In tryMoveDown...
+
+0 0 0 0 
+0 0 0 0 
+0 0 0 0 
+0 1 0 0 
+		 */
+		
 		//assumes top left provided
 		//assumes lower "nums" checked
 		if (num < 1)
 			return false;//sanity check
 		if (y + 1 >= gr[0].length)//starting at edge
 			return false;
-		while (gr[x][y + 1] == val){ // too far left in block
+		while (gr[x][y + 1] == val){ // too far up in block
 			++y;// traverse right
 			if (y == gr[0].length - 1)//reached edge
-				break;
+				return false;
 		}
 		if (y + num >= gr[0].length)//too long a stride
 			return false;
@@ -191,6 +228,8 @@ public class RushSolver extends Thread{
 
 		if (x == gr.length - 1)
 			return gr[x][y + num] == 0;
+		if (gr[x][y + num] != 0)
+			return false;
 		while (gr[x + 1][y] == val){//there is another row
 			x++;
 			if (gr[x][y + num] != 0)
@@ -218,6 +257,9 @@ public class RushSolver extends Thread{
 				}
 			}
 			printSectors(temp);
+			GridState asd = new GridState(temp);
+			if (states.add(asd))
+				toProcess.add(new GridState(temp));
 			temp = clone2D(gr);
 			//add new grid
 			
@@ -230,7 +272,7 @@ public class RushSolver extends Thread{
 	private void tryMoveRight(int[][] gr, int val, int x, int y, int dir){
 		if (dir == 1)
 			return;
-		System.out.println("In tryMoveRight...\nGR: ");
+		System.out.println("In tryMoveRight...");
 		int numSpaces = 1;
 		int height = gr.length, width = gr[0].length;
 		int [][] temp = clone2D(gr);
@@ -245,6 +287,9 @@ public class RushSolver extends Thread{
 			}
 			//add new grid
 			printSectors(temp);
+			GridState asd = new GridState(temp);
+			if (states.add(asd))
+				toProcess.add(new GridState(temp));
 			temp = clone2D(gr);
 			
 			++numSpaces;
@@ -270,6 +315,9 @@ public class RushSolver extends Thread{
 				}
 			}
 			printSectors(temp);
+			GridState asd = new GridState(temp);
+			if (states.add(asd))
+				toProcess.add(new GridState(temp));
 			temp = clone2D(gr);
 			//add new grid
 			
@@ -287,8 +335,8 @@ public class RushSolver extends Thread{
 		int height = gr.length, width = gr[0].length;
 		int [][] temp = clone2D(gr);
 		while(canMoveDown(gr, val, x, y, numSpaces)){
-			for (int tX = width - 1; tX >= 0; --tX){
-				for (int tY = 0; tY < height; ++tY){//left right to prevent overwrite
+			for (int tX = 0; tX < width; ++tX){
+				for (int tY = height - 1; tY >= 0; --tY){//bot to top to prevent overwrite
 					if (gr[tX][tY] == val){//"map" original into temp transformed
 						temp[tX][tY] = 0;
 						temp[tX][tY + numSpaces] = gr[tX][tY];
@@ -297,6 +345,9 @@ public class RushSolver extends Thread{
 			}
 			//add new grid
 			printSectors(temp);
+			GridState asd = new GridState(temp);
+			if (states.add(asd))
+				toProcess.add(new GridState(temp));
 			temp = clone2D(gr);
 			
 			++numSpaces;
@@ -309,8 +360,6 @@ public class RushSolver extends Thread{
 		boolean [] indexIsDone = new boolean[dirs.length];//initializes to false
 		int width = gr[0].length, height = gr.length;
 		int val;
-		System.out.println("Print B4 All: ");
-		printSectors(gr);
 		for (int j = 0; j < height; ++j){
 			for (int k = 0; k < width; ++k){
 				val = gr[j][k];
