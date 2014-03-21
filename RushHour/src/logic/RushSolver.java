@@ -21,10 +21,11 @@ public class RushSolver extends Thread{
 		public GridState(int [][] gr){
 			daMap = clone2D(gr);
 			neighbors = new HashMap<Point, GridState>();
+			int primes[] = {17, 43};
 			int count = 0;
 			for (int i = 0; i < daMap.length; ++i){
 				for (int j = 0; j < daMap[0].length; ++j){
-					hashVal += count * daMap[i][j];
+					hashVal += count * primes[j % 2] * daMap[i][j];
 					count++;
 					hashVal %= Integer.MAX_VALUE / 4;
 				}
@@ -40,7 +41,7 @@ public class RushSolver extends Thread{
 				return true;
 			for (int i = 0; i < daMap.length; i++) {
 				for (int j = 0; j < daMap[0].length; j++) {
-					if (o.daMap[i][j] != daMap[i][j]){
+					if (o.daMap[i][j] != this.daMap[i][j]){
 						return false;
 					}
 				}
@@ -120,7 +121,8 @@ public class RushSolver extends Thread{
 	@Override
 	public void run(){
 		while(!toProcess.isEmpty()){
-			enumerate(toProcess.removeFirst().getGrid());
+			enumerate(toProcess.getFirst().getGrid());
+			toProcess.removeFirst();
 		}
 		
 		for (GridState st: states.values()){
@@ -271,7 +273,8 @@ public class RushSolver extends Thread{
 			if (!states.containsKey(compareKeyState)){
 				states.put(compareKeyState, compareKeyState);
 				curState.addNeighbor(4, numSpaces, compareKeyState);
-				toProcess.addLast(compareKeyState);
+				if (!toProcess.contains(compareKeyState))
+					toProcess.addLast(compareKeyState);
 			}else{
 				GridState toState = states.get(compareKeyState);
 				//System.out.println("New Neighbors ");
@@ -309,7 +312,8 @@ public class RushSolver extends Thread{
 			if (!states.containsKey(compareKeyState)){
 				states.put(compareKeyState, compareKeyState);
 				curState.addNeighbor(6, numSpaces, compareKeyState);
-				toProcess.addLast(compareKeyState);
+				if (!toProcess.contains(compareKeyState))
+					toProcess.addLast(compareKeyState);
 			}else{
 				GridState toState = states.get(compareKeyState);
 				curState.addNeighbor(6, numSpaces, toState);
@@ -343,7 +347,8 @@ public class RushSolver extends Thread{
 			if (!states.containsKey(compareKeyState)){
 				states.put(compareKeyState, compareKeyState);
 				curState.addNeighbor(2, numSpaces, compareKeyState);
-				toProcess.addLast(compareKeyState);
+				if (!toProcess.contains(compareKeyState))
+					toProcess.addLast(compareKeyState);
 			}else{
 				GridState toState = states.get(compareKeyState);
 				curState.addNeighbor(2, numSpaces, toState);
@@ -379,7 +384,8 @@ public class RushSolver extends Thread{
 			if (!states.containsKey(compareKeyState)){
 				states.put(compareKeyState, compareKeyState);
 				curState.addNeighbor(8, numSpaces, compareKeyState);
-				toProcess.addLast(compareKeyState);
+				if (!toProcess.contains(compareKeyState))
+					toProcess.addLast(compareKeyState);
 			}else{
 				GridState toState = states.get(compareKeyState);
 				curState.addNeighbor(8, numSpaces, toState);
@@ -402,6 +408,8 @@ public class RushSolver extends Thread{
 		} else {
 			states.put(curState, curState);
 		}
+		System.out.println("CurState: ");
+		printSectors(curState.getGrid());
 		for (int j = 0; j < height; ++j) {
 			for (int k = 0; k < width; ++k) {
 				val = gr[j][k];
