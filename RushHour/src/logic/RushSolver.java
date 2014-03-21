@@ -1,4 +1,5 @@
 package logic;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,8 +62,13 @@ public class RushSolver extends Thread{
 		}
 
 		public void addNeighbor(int dir, int numSpaces, GridState toState) {
-			//dir => left = 0, 1 = up, 2 = left, 3 = down
-			neighbors.put(new Point(dir, numSpaces), toState);
+			if (toState.equals(this))
+				return;
+			//dir => left = 4, 2 = up, 6 = right, 8 = down
+			if (!neighbors.containsKey(new Point(dir, numSpaces))){
+				neighbors.put(new Point(dir, numSpaces), toState);
+				toState.addNeighbor(10 - dir, numSpaces, toState);
+			}
 		}
 	}
 	
@@ -100,7 +106,6 @@ public class RushSolver extends Thread{
 	 * @param carDirs Array of cars dirs
 	 */
 	public RushSolver(int [][] initGrid, int []carDirs) {
-		//TODO Make it threaded possibly, private constructor?
 		dirs = new int[carDirs.length + 1];
 		for (int i = 1; i < dirs.length; ++i){
 			dirs[i] = carDirs[i - 1];
@@ -186,7 +191,6 @@ public class RushSolver extends Thread{
 	private boolean canMoveRight(int[][] gr, int val, int x, int y, int num){
 		//assumes top left provided
 		//assumes lower "nums" checked
-		//TODO Fix move right
 		if (num < 1)
 			return false;//sanity check
 		if (x + 1 >= gr.length)//starting at edge
@@ -262,12 +266,17 @@ public class RushSolver extends Thread{
 			}
 			//printSectors(temp);
 			GridState compareKeyState = new GridState(temp);
+			//System.out.println("TryMoveLeft: ");
+			//printSectors(compareKeyState.getGrid());
 			if (!states.containsKey(compareKeyState)){
 				states.put(compareKeyState, compareKeyState);
+				curState.addNeighbor(4, numSpaces, compareKeyState);
 				toProcess.addLast(compareKeyState);
 			}else{
 				GridState toState = states.get(compareKeyState);
-				curState.addNeighbor(0, numSpaces, toState);
+				//System.out.println("New Neighbors ");
+				//printSectors(compareKeyState.getGrid());
+				curState.addNeighbor(4, numSpaces, toState);
 			}
 			temp = clone2D(gr);
 			//add new grid
@@ -299,10 +308,11 @@ public class RushSolver extends Thread{
 			GridState compareKeyState = new GridState(temp);
 			if (!states.containsKey(compareKeyState)){
 				states.put(compareKeyState, compareKeyState);
+				curState.addNeighbor(6, numSpaces, compareKeyState);
 				toProcess.addLast(compareKeyState);
 			}else{
 				GridState toState = states.get(compareKeyState);
-				curState.addNeighbor(2, numSpaces, toState);
+				curState.addNeighbor(6, numSpaces, toState);
 			}
 			temp = clone2D(gr);
 			
@@ -332,10 +342,11 @@ public class RushSolver extends Thread{
 			GridState compareKeyState = new GridState(temp);
 			if (!states.containsKey(compareKeyState)){
 				states.put(compareKeyState, compareKeyState);
+				curState.addNeighbor(2, numSpaces, compareKeyState);
 				toProcess.addLast(compareKeyState);
 			}else{
 				GridState toState = states.get(compareKeyState);
-				curState.addNeighbor(1, numSpaces, toState);
+				curState.addNeighbor(2, numSpaces, toState);
 			}
 			//temp = clone2D(gr);
 			//add new grid
@@ -367,10 +378,11 @@ public class RushSolver extends Thread{
 			GridState compareKeyState = new GridState(temp);
 			if (!states.containsKey(compareKeyState)){
 				states.put(compareKeyState, compareKeyState);
+				curState.addNeighbor(8, numSpaces, compareKeyState);
 				toProcess.addLast(compareKeyState);
 			}else{
 				GridState toState = states.get(compareKeyState);
-				curState.addNeighbor(3, numSpaces, toState);
+				curState.addNeighbor(8, numSpaces, toState);
 			}
 			temp = clone2D(gr);
 			
@@ -384,23 +396,21 @@ public class RushSolver extends Thread{
 		boolean [] indexIsDone = new boolean[dirs.length];//initializes to false
 		int width = gr[0].length, height = gr.length;
 		int val;
-		for (int i = 1; i < indexIsDone.length; ++i) {
-			GridState curState = new GridState(gr);
-			if (states.containsKey(curState)) {
-				curState = states.get(curState);
-			} else {
-				states.put(curState, curState);
-			}
-			for (int j = 0; j < height; ++j) {
-				for (int k = 0; k < width; ++k) {
-					val = gr[j][k];
-					if (val == i && !indexIsDone[val]) {
-						tryMoveLeft(curState, gr, val, j, k, dirs[val]);
-						tryMoveRight(curState, gr, val, j, k, dirs[val]);
-						tryMoveUp(curState, gr, val, j, k, dirs[val]);
-						tryMoveDown(curState, gr, val, j, k, dirs[val]);
-						indexIsDone[val] = true;
-					}
+		GridState curState = new GridState(gr);
+		if (states.containsKey(curState)) {
+			curState = states.get(curState);
+		} else {
+			states.put(curState, curState);
+		}
+		for (int j = 0; j < height; ++j) {
+			for (int k = 0; k < width; ++k) {
+				val = gr[j][k];
+				if (val > 0 && !indexIsDone[val]) {
+					tryMoveLeft(curState, gr, val, j, k, dirs[val]);
+					tryMoveRight(curState, gr, val, j, k, dirs[val]);
+					tryMoveUp(curState, gr, val, j, k, dirs[val]);
+					tryMoveDown(curState, gr, val, j, k, dirs[val]);
+					indexIsDone[val] = true;
 				}
 			}
 		}
