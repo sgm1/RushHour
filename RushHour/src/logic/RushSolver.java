@@ -130,6 +130,10 @@ public class RushSolver extends Thread{
 			solMoves.add(end.getFromTransition());
 		}
 	}
+	
+	public LinkedList<Triple<Integer,Integer,Integer>> getMoves(){
+		return solMoves;
+	}
 
 	@Override
 	public void run(){
