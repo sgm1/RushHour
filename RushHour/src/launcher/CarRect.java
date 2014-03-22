@@ -26,6 +26,10 @@ public class CarRect extends Rectangle {
 		col = new Color(temp.nextInt(255), temp.nextInt(255), temp.nextInt(255));
 		symbol = text;
 	}
+	
+	public int getDir(){
+		return moveCapabilites;
+	}
 
 	public void draw(Graphics g) {
 		g.setColor(col);

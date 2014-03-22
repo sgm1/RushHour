@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import launcher.CarRect;
 import launcher.GamePanel;
@@ -10,13 +11,29 @@ public class RushHourGame {
 	private final int secWidth, secHeight;
 	private ArrayList<CarRect> cars = new ArrayList<CarRect>();
 	private GamePanel GUIPanel;
+	private int[]dirs;//quick look up, initializes to zero
 	private int[][] sector;//quick look up, initializes to zero
+	private LinkedList<Triple<Integer, Integer, Integer>> movesToSolve;
 
 	public RushHourGame(ArrayList<CarRect> carlist){
 		secWidth = CarRect.getTileSize();
 		secHeight = CarRect.getTileSize();
 		cars = carlist;
+		dirs = new int[carlist.size()];
+		for (int i = 0; i < carlist.size(); ++i){
+			dirs[i] = carlist.get(i).getDir();
+		}
 		sector = new int[GamePanel.getTileWidth()][GamePanel.getTileHeight()];
+		setSectors();
+		printSectors();
+
+		//solver(sector);//TODO returns steps
+
+		GUIPanel = new GamePanel(MainFrame.getWinWidth(), MainFrame.getWinHeight(), this);
+		GUIPanel.setCars(cars);
+	}
+	
+	private void setSectors(){
 		int x, y, w, h;
 		for (int i = 0; i < cars.size(); i++){//TODO Make this cleaner?
 			x = cars.get(i).x;
@@ -48,12 +65,14 @@ public class RushHourGame {
 				}
 			}
 		}
-		printSectors();
-
-		//solver(sector);//TODO returns steps
-
-		GUIPanel = new GamePanel(MainFrame.getWinWidth(), MainFrame.getWinHeight(), this);
-		GUIPanel.setCars(cars);
+	}
+	
+	public void solve(){
+		setSectors();
+		RushSolver temp = new RushSolver(sector,null);
+		temp.start();
+		while(temp.isAlive()){}//stall current thread?
+		movesToSolve = temp.getMoves();
 	}
 
 	private void printSectors(){
