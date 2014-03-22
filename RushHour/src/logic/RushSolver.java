@@ -1,20 +1,18 @@
 package logic;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.LinkedList;
 
 public class RushSolver extends Thread{
 	private static int[] dirsAllowed;
-	private static int maxSteps;
 	private static boolean isSolved;
+	private ActionListener eventHandler;
 	private static HashSet<GridState> visited;
 	private static GridState lastUsed;
 	private static GridState lastStep;//just in case it isn't lastUsed
 	private static LinkedList<GridState> toProcess;
-	private static LinkedList<GridState> solQueue;
 	private static LinkedList<Triple<Integer,Integer,Integer>> solMoves;
 	
 	private class GridState {
@@ -115,12 +113,11 @@ public class RushSolver extends Thread{
 		}
 		if (dirsAllowed[1] == 1)//sanity check
 			throw new IllegalArgumentException("First block must be able to move right");
+		eventHandler = null;
 		toProcess = new LinkedList<GridState>();
 		visited = new HashSet<GridState>();
-		solQueue = new LinkedList<GridState>();
 		solMoves = new LinkedList<Triple<Integer,Integer,Integer>>();
 		toProcess.addFirst(new GridState(initGrid, null, null));
-		maxSteps = 0;
 	}
 	
 	private void backTracePath(GridState end){
@@ -148,8 +145,10 @@ public class RushSolver extends Thread{
 			//printSectors(temp.getGrid());
 			lastUsed = temp;
 			checkIsSolution(temp);
-			if (isSolved)
+			if (isSolved){
+				sendEvent();
 				return;
+			}
 			enumerate(steps, temp.getGrid());
 			visited.add(temp);
 			if (!toProcess.isEmpty()){
@@ -157,12 +156,24 @@ public class RushSolver extends Thread{
 			}
 		}
 		if (!isSolved){
-			System.out.println("Unsolveable");
 			return;
 		}
 		
 		backTracePath(lastStep);
-		
+		System.out.println("BT done");
+		if(eventHandler == null){
+			throw new IllegalArgumentException("Needs an RushHourGame");
+		}
+		sendEvent();
+	}
+	
+	private void sendEvent(){
+		ActionEvent message = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null);
+		eventHandler.actionPerformed(message);
+	}
+	
+	public void addActionListioner(ActionListener e){
+		eventHandler = e;
 	}
 	
 

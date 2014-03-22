@@ -1,5 +1,7 @@
 package logic;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -7,9 +9,10 @@ import launcher.CarRect;
 import launcher.GamePanel;
 import launcher.MainFrame;
 
-public class RushHourGame {
+public class RushHourGame implements ActionListener{
 	private final int secWidth, secHeight;
-	private static int isSovling = 0;
+	private int isSovling = 0;
+	private RushSolver solver;
 	//TODO Lock other until done (2), unless not solving (0)
 	private ArrayList<CarRect> cars = new ArrayList<CarRect>();
 	private GamePanel GUIPanel;
@@ -29,16 +32,15 @@ public class RushHourGame {
 		setSectors();
 		printSectors();
 
-		//solver(sector);//TODO returns steps
-
 		GUIPanel = new GamePanel(MainFrame.getWinWidth(), MainFrame.getWinHeight(), this);
-		GUIPanel.setCars(cars);	
+		GUIPanel.setCars(cars);
+		
 		solve();
 	}
 	
 	private void setSectors(){
 		int x, y, w, h;
-		for (int i = 0; i < cars.size(); i++){//TODO Make this cleaner?
+		for (int i = 0; i < cars.size(); i++){
 			x = cars.get(i).x;
 			y = cars.get(i).y;
 			w = cars.get(i).width - 1;// -1 for the int div round off
@@ -71,31 +73,11 @@ public class RushHourGame {
 	}
 	
 	public void solve(){
-		//TODO need to check if already won in start state
+		isSovling = 1;
 		setSectors();
-		RushSolver temp = new RushSolver(sector,dirs);
-		temp.start();
-		while(temp.isAlive()){}//stall current thread?
-		movesToSolve = temp.getMoves();
-		if (!temp.isSolvable()){
-			System.out.println("***No solution***");
-			return;
-		}
-		if (temp.isSolvable()){
-			System.out.println("***Solvable***");
-			if (!movesToSolve.isEmpty())
-				movesToSolve.remove();
-			for (int i = 0; i < movesToSolve.size(); ++i){
-				System.out.println(movesToSolve.get(0).dir + " " +
-						movesToSolve.get(0).from + " " +
-						movesToSolve.get(0).spaces);
-				//TODO Use this information to finally move the pieces
-				//-dir is direction
-				//		think numpad 2 = down, 8 = up, 4 = left, 6 = right
-				//-from is the piece to move
-				//-space tell you how many
-			}
-		}
+		solver = new RushSolver(sector, dirs);
+		solver.addActionListioner(this);
+		solver.start();
 		
 	}
 
@@ -112,6 +94,34 @@ public class RushHourGame {
 
 	public GamePanel getPanel(){
 		return GUIPanel;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == solver){
+			//TODO Prevent solver before this is called
+			movesToSolve = solver.getMoves();
+			if (!solver.isSolvable()){
+				System.out.println("***No solution***");
+				return;
+			}
+			if (solver.isSolvable()){
+				System.out.println("***Solvable***");
+				if (!movesToSolve.isEmpty())
+					movesToSolve.remove();
+				for (int i = 0; i < movesToSolve.size(); ++i){
+					System.out.println(movesToSolve.get(0).dir + " " +
+							movesToSolve.get(0).from + " " +
+							movesToSolve.get(0).spaces);
+					//TODO Use this information to finally move the pieces
+					//-dir is direction
+					//		think numpad 2 = down, 8 = up, 4 = left, 6 = right
+					//-from is the piece to move
+					//-space tell you how many
+				}
+			}
+		}
+		
 	}
 
 }
