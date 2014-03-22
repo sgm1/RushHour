@@ -126,9 +126,14 @@ public class RushSolver extends Thread{
 	private void backTracePath(GridState end){
 		if (end != null){
 			backTracePath(end.getFromState());
-			printSectors(end.getGrid());
+			//printSectors(end.getGrid());
 			solMoves.add(end.getFromTransition());
 		}
+	}
+	
+
+	public boolean isSolvable(){
+		return isSolved;
 	}
 	
 	public LinkedList<Triple<Integer,Integer,Integer>> getMoves(){
@@ -142,6 +147,9 @@ public class RushSolver extends Thread{
 			GridState temp = toProcess.getFirst();
 			//printSectors(temp.getGrid());
 			lastUsed = temp;
+			checkIsSolution(temp);
+			if (isSolved)
+				return;
 			enumerate(steps, temp.getGrid());
 			visited.add(temp);
 			if (!toProcess.isEmpty()){
@@ -154,10 +162,6 @@ public class RushSolver extends Thread{
 		}
 		
 		backTracePath(lastStep);
-		System.out.println("Found:");
-		for (GridState e: visited){
-			//printSectors(e.getGrid());
-		}
 		
 	}
 	

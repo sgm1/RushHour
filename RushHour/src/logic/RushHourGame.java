@@ -9,6 +9,7 @@ import launcher.MainFrame;
 
 public class RushHourGame {
 	private final int secWidth, secHeight;
+	private static int isSovling = 0;//TODO Lock other until done (2), unless not solving (0)
 	private ArrayList<CarRect> cars = new ArrayList<CarRect>();
 	private GamePanel GUIPanel;
 	private int[]dirs;//quick look up, initializes to zero
@@ -30,7 +31,8 @@ public class RushHourGame {
 		//solver(sector);//TODO returns steps
 
 		GUIPanel = new GamePanel(MainFrame.getWinWidth(), MainFrame.getWinHeight(), this);
-		GUIPanel.setCars(cars);
+		GUIPanel.setCars(cars);	
+		solve();
 	}
 	
 	private void setSectors(){
@@ -68,11 +70,27 @@ public class RushHourGame {
 	}
 	
 	public void solve(){
+		//TODO need to check if already won in start state
 		setSectors();
-		RushSolver temp = new RushSolver(sector,null);
+		RushSolver temp = new RushSolver(sector,dirs);
 		temp.start();
 		while(temp.isAlive()){}//stall current thread?
 		movesToSolve = temp.getMoves();
+		if (!temp.isSolvable()){
+			System.out.println("***No solution***");
+			return;
+		}
+		if (temp.isSolvable()){
+			System.out.println("***Solvable***");
+			if (!movesToSolve.isEmpty())
+				movesToSolve.remove();
+			for (int i = 0; i < movesToSolve.size(); ++i){
+				System.out.println(movesToSolve.get(0).dir + " " +
+						movesToSolve.get(0).from + " " +
+						movesToSolve.get(0).spaces);
+			}
+		}
+		
 	}
 
 	private void printSectors(){
