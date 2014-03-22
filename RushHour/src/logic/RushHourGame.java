@@ -88,6 +88,11 @@ public class RushHourGame {
 				System.out.println(movesToSolve.get(0).dir + " " +
 						movesToSolve.get(0).from + " " +
 						movesToSolve.get(0).spaces);
+				//TODO Use this information to finally move the pieces
+				//-dir is direction
+				//		think numpad 2 = down, 8 = up, 4 = left, 6 = right
+				//-from is the piece to move
+				//-space tell you how many
 			}
 		}
 		
