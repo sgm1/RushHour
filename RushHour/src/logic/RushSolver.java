@@ -12,31 +12,21 @@ public class RushSolver extends Thread{
 	private static boolean isSolved;
 	private static HashSet<GridState> visited;
 	private static GridState lastUsed;
+	private static GridState lastStep;//just in case it isn't lastUsed
 	private static LinkedList<GridState> toProcess;
-	private static LinkedList<GridState> solutionList;
-	
-	private class Triple{
-		public final GridState from;
-		public final int dir;
-		public final int spaces;
-		
-		public Triple(GridState f, int d, int s){
-			from = f;
-			dir = d;
-			spaces = s;
-		}
-	}
+	private static LinkedList<GridState> solQueue;
+	private static LinkedList<Triple<Integer,Integer,Integer>> solMoves;
 	
 	private class GridState {
 		private int [][] daMap;
 		private int hashVal;
-		private int stepsFromStart;
-		private Triple source;
+		private GridState fromState;
+		private Triple<Integer, Integer, Integer>  source;
 
-		public GridState(int [][] gr, int numSteps, Triple fromDat){
+		public GridState(int [][] gr, GridState numSteps, Triple<Integer, Integer, Integer>  fromDat){
 			daMap = clone2D(gr);
 			int primes[] = {401, 919};//good hash distribution?
-			stepsFromStart = numSteps;
+			fromState = numSteps;
 			source = fromDat;
 			
 			int count = 0;
@@ -47,6 +37,14 @@ public class RushSolver extends Thread{
 					hashVal %= Integer.MAX_VALUE / 4;
 				}
 			}
+		}
+		
+		public GridState getFromState(){
+			return fromState;
+		}
+		
+		public Triple<Integer, Integer, Integer> getFromTransition(){
+			return source;
 		}
 
 		@Override
@@ -119,8 +117,18 @@ public class RushSolver extends Thread{
 			throw new IllegalArgumentException("First block must be able to move right");
 		toProcess = new LinkedList<GridState>();
 		visited = new HashSet<GridState>();
-		toProcess.addFirst(new GridState(initGrid, 0, null));
+		solQueue = new LinkedList<GridState>();
+		solMoves = new LinkedList<Triple<Integer,Integer,Integer>>();
+		toProcess.addFirst(new GridState(initGrid, null, null));
 		maxSteps = 0;
+	}
+	
+	private void backTracePath(GridState end){
+		if (end != null){
+			backTracePath(end.getFromState());
+			printSectors(end.getGrid());
+			solMoves.add(end.getFromTransition());
+		}
 	}
 
 	@Override
@@ -128,7 +136,8 @@ public class RushSolver extends Thread{
 		int steps = 0;
 		while(!toProcess.isEmpty()){
 			GridState temp = toProcess.getFirst();
-			printSectors(temp.getGrid());
+			//printSectors(temp.getGrid());
+			lastUsed = temp;
 			enumerate(steps, temp.getGrid());
 			visited.add(temp);
 			if (!toProcess.isEmpty()){
@@ -139,9 +148,11 @@ public class RushSolver extends Thread{
 			System.out.println("Unsolveable");
 			return;
 		}
+		
+		backTracePath(lastStep);
 		System.out.println("Found:");
 		for (GridState e: visited){
-			printSectors(e.getGrid());
+			//printSectors(e.getGrid());
 		}
 		
 	}
@@ -266,6 +277,7 @@ public class RushSolver extends Thread{
 		for (int y = 0; y < grid[0].length; ++y){
 			if (grid[lx][y] == 1){// if last x has value 1
 				isSolved = true;
+				lastStep = gr;
 				visited.add(gr);
 				toProcess.clear();
 			}
@@ -289,8 +301,9 @@ public class RushSolver extends Thread{
 					}
 				}
 			}
-			Triple transitionInfo = new Triple(lastUsed, 4, numSpaces);
-			GridState newState = new GridState(temp, steps, transitionInfo);
+			Triple<Integer, Integer, Integer>  transitionInfo =
+					new Triple<Integer, Integer, Integer> (val, 4, numSpaces);
+			GridState newState = new GridState(temp, lastUsed, transitionInfo);
 			checkIsSolution(newState);
 			if (!isSolved && !visited.contains(newState)){
 				//System.out.println("Hi thr l");
@@ -322,8 +335,9 @@ public class RushSolver extends Thread{
 					}
 				}
 			}
-			Triple transitionInfo = new Triple(lastUsed, 4, numSpaces);
-			GridState newState = new GridState(temp, steps, transitionInfo);
+			Triple<Integer, Integer, Integer>  transitionInfo =
+					new Triple<Integer, Integer, Integer> (val, 6, numSpaces);
+			GridState newState = new GridState(temp, lastUsed, transitionInfo);
 			checkIsSolution(newState);
 			if (!isSolved && !visited.contains(newState)){
 				//System.out.println("Hi thr r");
@@ -354,8 +368,9 @@ public class RushSolver extends Thread{
 					}
 				}
 			}
-			Triple transitionInfo = new Triple(lastUsed, 4, numSpaces);
-			GridState newState = new GridState(temp, steps, transitionInfo);
+			Triple<Integer, Integer, Integer>  transitionInfo =
+					new Triple<Integer, Integer, Integer> (val, 8, numSpaces);
+			GridState newState = new GridState(temp, lastUsed, transitionInfo);
 			checkIsSolution(newState);
 			if (!isSolved && !visited.contains(newState)){
 				//System.out.println("Hi thr u");
@@ -387,8 +402,9 @@ public class RushSolver extends Thread{
 					}
 				}
 			}
-			Triple transitionInfo = new Triple(lastUsed, 4, numSpaces);
-			GridState newState = new GridState(temp, steps, transitionInfo);
+			Triple<Integer, Integer, Integer>  transitionInfo =
+					new Triple<Integer, Integer, Integer> (val, 2, numSpaces);
+			GridState newState = new GridState(temp, lastUsed, transitionInfo);
 			checkIsSolution(newState);
 			if (!isSolved && !visited.contains(newState)){
 				//System.out.println("Hi thr d");
