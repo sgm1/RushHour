@@ -6,14 +6,14 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 public class RushSolver extends Thread{
-	private static int[] dirsAllowed;
-	private static boolean isSolved;
+	private int[] dirsAllowed;
+	private boolean isSolved;
 	private ActionListener eventHandler;
-	private static HashSet<GridState> visited;
-	private static GridState lastUsed;
-	private static GridState lastStep;//just in case it isn't lastUsed
-	private static LinkedList<GridState> toProcess;
-	private static LinkedList<Triple<Integer,Integer,Integer>> solMoves;
+	private HashSet<GridState> visited;
+	private GridState lastUsed;
+	private GridState lastStep;//just in case it isn't lastUsed
+	private LinkedList<GridState> toProcess;
+	private LinkedList<Triple<Integer,Integer,Integer>> solMoves;
 	
 	private class GridState {
 		private int [][] daMap;
@@ -156,6 +156,7 @@ public class RushSolver extends Thread{
 			}
 		}
 		if (!isSolved){
+			sendEvent();
 			return;
 		}
 		
@@ -294,7 +295,8 @@ public class RushSolver extends Thread{
 		int [][] grid = gr.getGrid();
 		int lx = grid.length - 1;
 		for (int y = 0; y < grid[0].length; ++y){
-			if (grid[lx][y] == 1){// if last x has value 1
+			//if (grid[lx][y] == 1){// if last x has value 1, assume right side
+			if (grid[0][y] == 1){// if x column has value 1, assume left side wins
 				isSolved = true;
 				lastStep = gr;
 				visited.add(gr);
@@ -449,6 +451,7 @@ public class RushSolver extends Thread{
 		for (int j = 0; j < height; ++j) {
 			for (int k = 0; k < width; ++k) {
 				val = gr[j][k];
+				System.out.println("Processing");
 				
 				if (val > 0 && !indexIsDone[val]) {
 					tryMoveLeft(steps, gr, val, j, k, dirsAllowed[val]);

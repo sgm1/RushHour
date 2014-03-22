@@ -75,7 +75,13 @@ public class RushHourGame implements ActionListener{
 	public void solve(){
 		isSovling = 1;
 		setSectors();
-		solver = new RushSolver(sector, dirs);
+		try{
+			solver = new RushSolver(sector, dirs);
+		}catch(Exception e){
+			System.out.println("Z peive canot move horiziontal, unsolveable");
+			return;
+		}
+		System.out.println("solving..");
 		solver.addActionListioner(this);
 		solver.start();
 		
@@ -98,6 +104,7 @@ public class RushHourGame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		System.out.println("ASDASD");
 		if (e.getSource() == solver){
 			//TODO Prevent solver before this is called
 			movesToSolve = solver.getMoves();
