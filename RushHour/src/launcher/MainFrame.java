@@ -31,12 +31,12 @@ public class MainFrame extends JFrame implements Runnable{
 
 	private static JTextArea moveCounter;
 	private static ArrayList<CarRect> carlist = new ArrayList<CarRect>();
-	private static int numLevels = 1;
+	private static int numLevels = 12;
 	private static int levelCount = 1;
 	private static boolean closeGame = false;
 	private static int carsMade;
 	private static RushHourGame daGame;
-	private static final char[] extraChars = {'€','ƒ','†','‡','ˆ','‰','Š','‹','Œ','Ž','™','š','›','œ','ž','Ÿ','¡','¢','£','¤','¥','¦','§','©','«','¬','®','¯','°','±','²','³','µ','¶','¹','»','¼','½','¾','¿','À','Ç','È','Ì','Ð','Ñ','Ò','×','Ø','Ù','Ý','Þ','ß','à','æ','ç','è','ì','ð','ñ','ò','÷','ø','ù','…','ý','þ'};
+	private static final char[] extraChars = {'ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½'};
 	//for puzzles with more than 61 pieces
 	private static boolean gameWon = false;
 
@@ -91,7 +91,7 @@ public class MainFrame extends JFrame implements Runnable{
 		boolean skipLine = false;
 		carsMade = 0;
 		try {
-			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("proj3d.data"));
+			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("level" + levelCount + ".data"));
 			String sCurrentLine;
 			br = new BufferedReader(temp);
 			if ((sCurrentLine = br.readLine()) != null) {//get grid dimensions
