@@ -9,7 +9,8 @@ import launcher.MainFrame;
 
 public class RushHourGame {
 	private final int secWidth, secHeight;
-	private static int isSovling = 0;//TODO Lock other until done (2), unless not solving (0)
+	private static int isSovling = 0;
+	//TODO Lock other until done (2), unless not solving (0)
 	private ArrayList<CarRect> cars = new ArrayList<CarRect>();
 	private GamePanel GUIPanel;
 	private int[]dirs;//quick look up, initializes to zero
