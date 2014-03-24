@@ -117,9 +117,11 @@ public class RushHourGame implements ActionListener{
 				if (!movesToSolve.isEmpty())
 					movesToSolve.remove();
 				for (int i = 0; i < movesToSolve.size(); ++i){
-					System.out.println(movesToSolve.get(0).dir + " " +
-							movesToSolve.get(0).from + " " +
-							movesToSolve.get(0).spaces);
+					if (movesToSolve.get(i) != null){
+						System.out.println("Move piece " + movesToSolve.get(i).from +
+								" in dir " + movesToSolve.get(i).dir +
+								" by " + movesToSolve.get(i).spaces + " space(s)");
+					}
 					//TODO Use this information to finally move the pieces
 					//-dir is direction
 					//		think numpad 2 = down, 8 = up, 4 = left, 6 = right

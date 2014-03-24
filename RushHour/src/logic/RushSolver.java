@@ -106,6 +106,7 @@ public class RushSolver extends Thread{
 	 * @param carDirs Array of cars dirs
 	 */
 	public RushSolver(int [][] initGrid, int []carDirs) {
+		printSectors(initGrid);
 		lastUsed = null;
 		dirsAllowed = new int[carDirs.length + 1];
 		for (int i = 1; i < dirsAllowed.length; ++i){
@@ -122,9 +123,9 @@ public class RushSolver extends Thread{
 	
 	private void backTracePath(GridState end){
 		if (end != null){
+			solMoves.add(end.getFromTransition());
 			backTracePath(end.getFromState());
 			//printSectors(end.getGrid());
-			solMoves.add(end.getFromTransition());
 		}
 	}
 	
@@ -451,8 +452,6 @@ public class RushSolver extends Thread{
 		for (int j = 0; j < height; ++j) {
 			for (int k = 0; k < width; ++k) {
 				val = gr[j][k];
-				System.out.println("Processing");
-				
 				if (val > 0 && !indexIsDone[val]) {
 					tryMoveLeft(steps, gr, val, j, k, dirsAllowed[val]);
 					tryMoveRight(steps, gr, val, j, k, dirsAllowed[val]);

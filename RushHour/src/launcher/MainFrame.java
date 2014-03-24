@@ -91,7 +91,7 @@ public class MainFrame extends JFrame implements Runnable{
 		boolean skipLine = false;
 		carsMade = 0;
 		try {
-			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("proj3d.data"));
+			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("proj3f.data"));
 			String sCurrentLine;
 			br = new BufferedReader(temp);
 			if ((sCurrentLine = br.readLine()) != null) {//get grid dimensions
