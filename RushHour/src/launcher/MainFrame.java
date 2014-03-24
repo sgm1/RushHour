@@ -31,12 +31,20 @@ public class MainFrame extends JFrame implements Runnable{
 
 	private static JTextArea moveCounter;
 	private static ArrayList<CarRect> carlist = new ArrayList<CarRect>();
-	private static int numLevels = 1;
+	private static int numLevels = 12;
 	private static int levelCount = 1;
 	private static boolean closeGame = false;
 	private static int carsMade;
 	private static RushHourGame daGame;
-	private static final char[] extraChars = {'€','ƒ','†','‡','ˆ','‰','Š','‹','Œ','Ž','™','š','›','œ','ž','Ÿ','¡','¢','£','¤','¥','¦','§','©','«','¬','®','¯','°','±','²','³','µ','¶','¹','»','¼','½','¾','¿','À','Ç','È','Ì','Ð','Ñ','Ò','×','Ø','Ù','Ý','Þ','ß','à','æ','ç','è','ì','ð','ñ','ò','÷','ø','ù','…','ý','þ'};
+	private static final char[] extraChars = {'\0', '\1', '\2', '\3', '\4', '\5', '\6', '\7', '\10', '\11', '\12', '\13', '\14', '\15'
+		, '\16', '\17', '\20', '\21', '\22', '\23', '\24', '\25', '\26', '\27', '\30', '\31', '\32', '\33'
+		, '\34', '\35', '\36', '\37', '\40', '\41', '\42', '\43', '\44', '\45', '\46', '\47', '\50', '\51'
+		, '\52', '\53', '\54', '\55', '\56', '\57', '\60', '\61', '\62', '\63', '\64', '\65', '\66', '\67'
+		, '\70', '\71', '\72', '\73', '\74', '\75', '\76', '\77', '\100', '\101', '\102', '\103', '\104', '\105'
+		, '\106', '\107', '\110', '\111', '\112', '\113', '\114', '\115', '\116', '\117', '\120', '\121', '\122', '\123'
+		, '\124', '\125', '\126', '\127', '\130', '\131', '\132', '\133', '\134', '\135', '\136', '\137', '\140', '\141'
+		, '\142', '\143', '\144', '\145', '\146', '\147', '\150', '\151', '\152', '\153', '\154', '\155', '\156', '\157'
+		, '\160', '\161', '\162', '\163', '\164', '\165', '\166', '\167', '\170', '\171', '\172', '\173', '\174', '\175'};
 	//for puzzles with more than 61 pieces
 	private static boolean gameWon = false;
 
@@ -91,7 +99,9 @@ public class MainFrame extends JFrame implements Runnable{
 		boolean skipLine = false;
 		carsMade = 0;
 		try {
+			//TODO put back the other one after levels added
 			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("proj3f.data"));
+			//InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("level" + levelCount + ".data"));
 			String sCurrentLine;
 			br = new BufferedReader(temp);
 			if ((sCurrentLine = br.readLine()) != null) {//get grid dimensions
