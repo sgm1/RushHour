@@ -2,22 +2,15 @@ package launcher;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 
-import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import java.util.ArrayList;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 import launcher.GamePanel;
 import logic.RushHourGame;
@@ -100,7 +93,7 @@ public class MainFrame extends JFrame implements Runnable{
 		carsMade = 0;
 		try {
 			//TODO put back the other one after levels added
-			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("proj3f.data"));
+			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("proj3c.data"));
 			//InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("level" + levelCount + ".data"));
 			String sCurrentLine;
 			br = new BufferedReader(temp);

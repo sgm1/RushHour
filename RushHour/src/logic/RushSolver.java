@@ -112,8 +112,18 @@ public class RushSolver extends Thread{
 		for (int i = 1; i < dirsAllowed.length; ++i){
 			dirsAllowed[i] = carDirs[i - 1];
 		}
-		if (dirsAllowed[1] == 1)//sanity check
-			throw new IllegalArgumentException("First block must be able to move right");
+		if (dirsAllowed[1] == 1){//sanity check
+			boolean throwIll = true;
+			for (int i = 0; i < initGrid[0].length; ++i){
+				if (initGrid[0][i] == 1){
+					throwIll = false;
+					break;
+				}
+			}
+			if (throwIll)
+				throw new IllegalArgumentException("First block must be able to move right");
+		}
+		
 		eventHandler = null;
 		toProcess = new LinkedList<GridState>();
 		visited = new HashSet<GridState>();
@@ -123,8 +133,8 @@ public class RushSolver extends Thread{
 	
 	private void backTracePath(GridState end){
 		if (end != null){
-			solMoves.add(end.getFromTransition());
 			backTracePath(end.getFromState());
+			solMoves.add(end.getFromTransition());
 			//printSectors(end.getGrid());
 		}
 	}

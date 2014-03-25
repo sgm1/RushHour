@@ -12,8 +12,8 @@ import launcher.MainFrame;
 public class RushHourGame implements ActionListener{
 	private final int secWidth, secHeight;
 	private int isSovling = 0;
-	private RushSolver solver;
 	//TODO Lock other until done (2), unless not solving (0)
+	private RushSolver solver;
 	private ArrayList<CarRect> cars = new ArrayList<CarRect>();
 	private GamePanel GUIPanel;
 	private int[]dirs;//quick look up, initializes to zero
@@ -38,7 +38,7 @@ public class RushHourGame implements ActionListener{
 		solve();
 	}
 	
-	private void setSectors(){
+	private void setSectors(){//TODO Change to support oversized blocks? 
 		int x, y, w, h;
 		for (int i = 0; i < cars.size(); i++){
 			x = cars.get(i).x;
@@ -77,8 +77,8 @@ public class RushHourGame implements ActionListener{
 		setSectors();
 		try{
 			solver = new RushSolver(sector, dirs);
-		}catch(Exception e){
-			System.out.println("Z peive canot move horiziontal, unsolveable");
+		}catch(IllegalArgumentException e){
+			System.out.println("Z piece canot move horiziontal, unsolveable");
 			return;
 		}
 		System.out.println("solving..");
