@@ -104,7 +104,6 @@ public class RushHourGame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("ASDASD");
 		if (e.getSource() == solver){
 			//TODO Prevent solver before this is called
 			movesToSolve = solver.getMoves();
@@ -114,8 +113,8 @@ public class RushHourGame implements ActionListener{
 			}
 			if (solver.isSolvable()){
 				System.out.println("***Solvable***");
-				if (!movesToSolve.isEmpty())
-					movesToSolve.remove();
+				//if (!movesToSolve.isEmpty())
+				//	movesToSolve.remove();
 				for (int i = 0; i < movesToSolve.size(); ++i){
 					if (movesToSolve.get(i) != null){
 						System.out.println("Move piece " + movesToSolve.get(i).from +

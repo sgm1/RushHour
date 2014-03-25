@@ -142,18 +142,19 @@ public class RushSolver extends Thread{
 	public void run(){
 		int steps = 0;
 		while(!toProcess.isEmpty()){
-			GridState temp = toProcess.getFirst();
-			//printSectors(temp.getGrid());
+			GridState temp = toProcess.getLast();
 			lastUsed = temp;
+			//printSectors(temp.getGrid());
 			checkIsSolution(temp);
 			if (isSolved){
 				sendEvent();
 				return;
 			}
 			enumerate(steps, temp.getGrid());
+			lastUsed = temp;
 			visited.add(temp);
 			if (!toProcess.isEmpty()){
-				toProcess.removeFirst();
+				toProcess.removeLast();
 			}
 		}
 		if (!isSolved){
@@ -294,10 +295,10 @@ public class RushSolver extends Thread{
 
 	private void checkIsSolution(GridState gr) {
 		int [][] grid = gr.getGrid();
-		int lx = grid.length - 1;
+		//int lx = grid.length - 1;
+		int lx = 0;
 		for (int y = 0; y < grid[0].length; ++y){
-			//if (grid[lx][y] == 1){// if last x has value 1, assume right side
-			if (grid[0][y] == 1){// if x column has value 1, assume left side wins
+			if (grid[lx][y] == 1){// if last x has value 1, assume right side
 				isSolved = true;
 				lastStep = gr;
 				visited.add(gr);
