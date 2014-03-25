@@ -93,7 +93,7 @@ public class MainFrame extends JFrame implements Runnable{
 		carsMade = 0;
 		try {
 			//TODO put back the other one after levels added
-			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("proj3c.data"));
+			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("proj3f.data"));
 			//InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("level" + levelCount + ".data"));
 			String sCurrentLine;
 			br = new BufferedReader(temp);

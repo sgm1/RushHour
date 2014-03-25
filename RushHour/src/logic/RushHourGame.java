@@ -1,9 +1,12 @@
 package logic;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import javax.swing.Timer;
 
 import launcher.CarRect;
 import launcher.GamePanel;
@@ -16,13 +19,21 @@ public class RushHourGame implements ActionListener{
 	private RushSolver solver;
 	private ArrayList<CarRect> cars = new ArrayList<CarRect>();
 	private GamePanel GUIPanel;
+	private int stepsPerMove;
+	private int stepsInMove;
+	private int carNum;
+	private Point curfrom;
+	private Point curTo;
 	private int[]dirs;//quick look up, initializes to zero
 	private int[][] sector;//quick look up, initializes to zero
 	private LinkedList<Triple<Integer, Integer, Integer>> movesToSolve;
+	private Timer solveAniTimer;
 
 	public RushHourGame(ArrayList<CarRect> carlist){
 		secWidth = CarRect.getTileSize();
 		secHeight = CarRect.getTileSize();
+		stepsPerMove = 20;
+		stepsInMove = 0;
 		cars = carlist;
 		dirs = new int[carlist.size()];
 		for (int i = 0; i < carlist.size(); ++i){
@@ -85,6 +96,7 @@ public class RushHourGame implements ActionListener{
 		solver.addActionListioner(this);
 		solver.start();
 		
+		
 	}
 
 	private void printSectors(){
@@ -113,23 +125,30 @@ public class RushHourGame implements ActionListener{
 			}
 			if (solver.isSolvable()){
 				System.out.println("***Solvable***");
-				//if (!movesToSolve.isEmpty())
-				//	movesToSolve.remove();
-				for (int i = 0; i < movesToSolve.size(); ++i){
-					if (movesToSolve.get(i) != null){
-						System.out.println("Move piece " + movesToSolve.get(i).from +
-								" in dir " + movesToSolve.get(i).dir +
-								" by " + movesToSolve.get(i).spaces + " space(s)");
-					}
-					//TODO Use this information to finally move the pieces
-					//-dir is direction
-					//		think numpad 2 = down, 8 = up, 4 = left, 6 = right
-					//-from is the piece to move
-					//-space tell you how many
-				}
+			}
+			startSolveAnimation();
+		} else if (e.getSource() == solveAniTimer){
+			if (movesToSolve.isEmpty()){
+				solveAniTimer.stop();
+				return;
+			}
+			Triple<Integer, Integer, Integer> curMove = movesToSolve.remove();
+			if (curMove != null){
+				System.out.println("Move piece " + curMove.from +
+						" in dir " + curMove.dir +
+						" by " + curMove.spaces + " space(s)");
+			}
+			if (movesToSolve.isEmpty()){
+				solveAniTimer.stop();
+				return;
 			}
 		}
-		
+	}
+	
+	private void startSolveAnimation(){
+		solveAniTimer = new Timer(2000, this);
+		solveAniTimer.setInitialDelay(0);//fire first move right away (null)
+		solveAniTimer.start();
 	}
 
 }
