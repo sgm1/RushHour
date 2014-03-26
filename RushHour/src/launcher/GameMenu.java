@@ -54,6 +54,11 @@ public class GameMenu extends JMenuBar implements ActionListener{
 	public static void resetLevel(){
 		myFrame.newLevel(true);
 	}
+	
+	public static void nextLevel(){
+		JOptionPane.showMessageDialog(null,"Puzzle solved! Loading next level...");
+		myFrame.newLevel(false);
+	}
 
 	public void actionPerformed(ActionEvent e) {
 		if("Reset".equals(e.getActionCommand())){ //Reset the game

@@ -240,7 +240,7 @@ public class MainFrame extends JFrame implements Runnable{
 	}
 
 	private static void resetLevels() {//after levels have been exhausted, start from the beginning
-		// TODO Auto-generated method stub
+		levelCount = 1;
 	}
 
 	public void quitGame(){

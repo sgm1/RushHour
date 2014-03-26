@@ -31,7 +31,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	public GamePanel(int w, int h, RushHourGame g) {
 		super();
 		game = g;
-		//gameRunning = true;
+		gameRunning = true;
 		numMoves = 0; savedX = -1; savedY = -1;
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
@@ -91,8 +91,13 @@ public class GamePanel extends JPanel implements MouseInputListener {
 					numMoves++;
 				repaint();
 			}
+			if((cars[0]==carPressed) && (cars[0].getX() + cars[0].getWidth() == CarRect.getTileSize() * tileWidth)){
+			    gameRunning = false;
+			    GameMenu.nextLevel();
+			   }
 			lastPressPoint = null;
 			carPressed = null;
+			
 		}
 	}
 	@Override
@@ -106,14 +111,6 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		for (CarRect t: cars) {
 			t.draw(g);
 		}
-		/*if((int)(cars[0].getX() + cars[0].getWidth()) == CarRect.getTileSize() * tileWidth && gameRunning){
-			JOptionPane.showMessageDialog(null,"CONGRATULATIONS! YOU WON! CLICK 'OK' TO CLAIM YOUR PRIZE.");
-			gameRunning = false;
-			GameMenu.resetLevel();
-		}*/
-		//TODO: add actionListener to option pane for 'next level' or 'quit'
-		//TODO: if levels are exhausted, ask to 'restart level 1' or 'quit'
-		//TODO: pause game until JOptionPane is closed
 	}
 
 
