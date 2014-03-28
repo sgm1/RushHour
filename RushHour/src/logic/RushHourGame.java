@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import javax.swing.Timer;
 
 import launcher.CarRect;
+import launcher.GameMenu;
 import launcher.GamePanel;
 import launcher.MainFrame;
 
@@ -28,8 +29,10 @@ public class RushHourGame implements ActionListener{
 	private int[][] sector;//quick look up, initializes to zero
 	private LinkedList<Triple<Integer, Integer, Integer>> movesToSolve;
 	private Timer solveAniTimer;
+	private boolean solveActivated;
 
 	public RushHourGame(ArrayList<CarRect> carlist){
+		solveActivated = false;
 		secWidth = CarRect.getTileSize();
 		secHeight = CarRect.getTileSize();
 		stepsPerMove = 20;
@@ -45,10 +48,10 @@ public class RushHourGame implements ActionListener{
 
 		GUIPanel = new GamePanel(MainFrame.getWinWidth(), MainFrame.getWinHeight(), this);
 		GUIPanel.setCars(cars);
-		
-		solve();
+
+		//solve();
 	}
-	
+
 	private void setSectors(){//TODO Change to support oversized blocks? 
 		int x, y, w, h;
 		for (int i = 0; i < cars.size(); i++){
@@ -82,7 +85,7 @@ public class RushHourGame implements ActionListener{
 			}
 		}
 	}
-	
+
 	public void solve(){
 		isSovling = 1;
 		setSectors();
@@ -95,8 +98,8 @@ public class RushHourGame implements ActionListener{
 		System.out.println("solving..");
 		solver.addActionListioner(this);
 		solver.start();
-		
-		
+
+
 	}
 
 	private void printSectors(){
@@ -117,17 +120,24 @@ public class RushHourGame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == solver){
-			//TODO Prevent solver before this is called
+			//DONE Prevent solver before this is called
 			movesToSolve = solver.getMoves();
 			if (!solver.isSolvable()){
 				System.out.println("***No solution***");
+				GameMenu.skipLevel();
 				return;
 			}
 			if (solver.isSolvable()){
 				System.out.println("***Solvable***");
 			}
+			System.out.println("Solve activated.");
+			solveActivated=false;
+			GamePanel.stopGame();
 			startSolveAnimation();
-		} else if (e.getSource() == solveAniTimer){
+		} 
+		else if (e.getSource() == solveAniTimer){
+			//TODO when movesToSolve is empty, show dialog message and return control back to the user
+			//TODO when dialog window is closed, open up next level
 			if (movesToSolve.isEmpty()){
 				solveAniTimer.stop();
 				return;
@@ -144,11 +154,12 @@ public class RushHourGame implements ActionListener{
 			}
 		}
 	}
-	
+
 	private void startSolveAnimation(){
-		solveAniTimer = new Timer(2000, this);
+		solveAniTimer = new Timer(1000, this);
 		solveAniTimer.setInitialDelay(0);//fire first move right away (null)
 		solveAniTimer.start();
 	}
+
 
 }

@@ -14,7 +14,7 @@ public class RushSolver extends Thread{
 	private GridState lastStep;//just in case it isn't lastUsed
 	private LinkedList<GridState> toProcess;
 	private LinkedList<Triple<Integer,Integer,Integer>> solMoves;
-	
+
 	private class GridState {
 		private int [][] daMap;
 		private int hashVal;
@@ -26,7 +26,7 @@ public class RushSolver extends Thread{
 			int primes[] = {401, 919};//good hash distribution?
 			fromState = numSteps;
 			source = fromDat;
-			
+
 			int count = 0;
 			for (int i = 0; i < daMap.length; ++i){
 				for (int j = 0; j < daMap[0].length; ++j){
@@ -36,11 +36,11 @@ public class RushSolver extends Thread{
 				}
 			}
 		}
-		
+
 		public GridState getFromState(){
 			return fromState;
 		}
-		
+
 		public Triple<Integer, Integer, Integer> getFromTransition(){
 			return source;
 		}
@@ -61,7 +61,7 @@ public class RushSolver extends Thread{
 			}
 			return true;
 		}
-		
+
 		@Override
 		public int hashCode(){
 			return hashVal;
@@ -71,7 +71,7 @@ public class RushSolver extends Thread{
 			return daMap.clone();//clone does deep copy (on primitives)
 		}
 	}
-	
+
 	private static int[][] clone2D(int[][] tmp){
 		int[][] asd = new int[tmp.length][tmp[0].length];
 		for (int i = 0; i < asd.length; ++i){
@@ -123,14 +123,14 @@ public class RushSolver extends Thread{
 			if (throwIll)
 				throw new IllegalArgumentException("First block must be able to move right");
 		}
-		
+
 		eventHandler = null;
 		toProcess = new LinkedList<GridState>();
 		visited = new HashSet<GridState>();
 		solMoves = new LinkedList<Triple<Integer,Integer,Integer>>();
 		toProcess.addFirst(new GridState(initGrid, null, null));
 	}
-	
+
 	private void backTracePath(GridState end){
 		if (end != null){
 			backTracePath(end.getFromState());
@@ -138,12 +138,12 @@ public class RushSolver extends Thread{
 			//printSectors(end.getGrid());
 		}
 	}
-	
+
 
 	public boolean isSolvable(){
 		return isSolved;
 	}
-	
+
 	public LinkedList<Triple<Integer,Integer,Integer>> getMoves(){
 		return solMoves;
 	}
@@ -171,7 +171,7 @@ public class RushSolver extends Thread{
 			sendEvent();
 			return;
 		}
-		
+
 		backTracePath(lastStep);
 		System.out.println("BT done");
 		if(eventHandler == null){
@@ -179,16 +179,16 @@ public class RushSolver extends Thread{
 		}
 		sendEvent();
 	}
-	
+
 	private void sendEvent(){
 		ActionEvent message = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null);
 		eventHandler.actionPerformed(message);
 	}
-	
+
 	public void addActionListioner(ActionListener e){
 		eventHandler = e;
 	}
-	
+
 
 	/**
 	 * Provided the top lect sector of the value 'val',
@@ -221,7 +221,7 @@ public class RushSolver extends Thread{
 		}
 		return false;
 	}
-	
+
 	private boolean canMoveUp(int[][] gr, int val, int x, int y, int num){
 		//assumes top left provided
 		//assumes lower "nums" checked
@@ -241,7 +241,7 @@ public class RushSolver extends Thread{
 		}
 		return false;
 	}
-	
+
 	private boolean canMoveRight(int[][] gr, int val, int x, int y, int num){
 		//assumes top left provided
 		//assumes lower "nums" checked
@@ -271,7 +271,7 @@ public class RushSolver extends Thread{
 		}
 		return true;//else can move, base case 2
 	}
-	
+
 	private boolean canMoveDown(int[][] gr, int val, int x, int y, int num){
 		//assumes top left provided
 		//assumes lower "nums" checked
@@ -305,8 +305,8 @@ public class RushSolver extends Thread{
 
 	private void checkIsSolution(GridState gr) {
 		int [][] grid = gr.getGrid();
-		//int lx = grid.length - 1;
-		int lx = 0;
+		int lx = grid.length - 1;
+		//int lx = 0;
 		for (int y = 0; y < grid[0].length; ++y){
 			if (grid[lx][y] == 1){// if last x has value 1, assume right side
 				isSolved = true;
@@ -344,7 +344,7 @@ public class RushSolver extends Thread{
 				toProcess.addFirst(newState);
 			}
 			//add new grid
-			
+
 			++numSpaces;
 		}
 
@@ -377,7 +377,7 @@ public class RushSolver extends Thread{
 				visited.add(newState);
 				toProcess.addFirst(newState);
 			}
-			
+
 			++numSpaces;
 		}
 		// parse right
@@ -411,7 +411,7 @@ public class RushSolver extends Thread{
 				toProcess.addFirst(newState);
 			}
 			//add new grid
-			
+
 			++numSpaces;
 		}
 
@@ -444,7 +444,7 @@ public class RushSolver extends Thread{
 				visited.add(newState);
 				toProcess.addFirst(newState);
 			}
-			
+
 			++numSpaces;
 		}
 		// parse down

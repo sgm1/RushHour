@@ -7,7 +7,7 @@ import javax.swing.*;
 public class GameMenu extends JMenuBar implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	private static MainFrame myFrame;
-	JButton resetButt; //Reset Button
+	JButton resetButt, solveButt, hintButt; //Reset Button
 
 	public GameMenu(MainFrame m){
 		myFrame = m;
@@ -50,19 +50,45 @@ public class GameMenu extends JMenuBar implements ActionListener{
 		resetButt = new JButton("Reset");
 		resetButt.addActionListener(this);
 		resetButt.setActionCommand("Reset");
+		resetButt.setFocusPainted(false);
+
+		solveButt = new JButton("Solve");
+		solveButt.addActionListener(this);
+		solveButt.setActionCommand("Solve");
+		solveButt.setFocusPainted(false);
+
+		hintButt = new JButton("Hint");
+		hintButt.addActionListener(this);
+		hintButt.setActionCommand("Hint");
+		hintButt.setFocusPainted(false);
+
 	}
 	public static void resetLevel(){
 		myFrame.newLevel(true);
 	}
-	
+
 	public static void nextLevel(){
 		JOptionPane.showMessageDialog(null,"Puzzle solved! Loading next level...");
+		myFrame.newLevel(false);
+	}
+
+	public static void skipLevel(){
+		JOptionPane.showMessageDialog(null, "Puzzle is not solvable! Loading next level...");
 		myFrame.newLevel(false);
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		if("Reset".equals(e.getActionCommand())){ //Reset the game
 			myFrame.newLevel(true);
+		}
+		if("Solve".equals(e.getActionCommand())){ //Solve the puzzle
+			System.out.println("Solve button clicked!");
+			MainFrame.startSolver();
+		}
+		if("Hint".equals(e.getActionCommand())){ //Solve the puzzle
+			System.out.println("Hint button clicked!");
+			//MainFrame.startSolver();
+			//TODO: allow for the first move from the solver to displayed in a dialog window
 		}
 		else if("exit".equals(e.getActionCommand())){ //Close Game Window and stop running
 			myFrame.quitGame();

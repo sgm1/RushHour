@@ -26,7 +26,7 @@ public class CarRect extends Rectangle {
 		col = new Color(temp.nextInt(255), temp.nextInt(255), temp.nextInt(255));
 		symbol = text;
 	}
-	
+
 	public int getDir(){
 		return moveCapabilites;
 	}
@@ -104,7 +104,7 @@ public class CarRect extends Rectangle {
 	public static int getTileSize(){
 		return tileDim;
 	}
-	
+
 	public static Rectangle[] getBorders(){
 		return borders;
 	}

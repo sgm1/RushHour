@@ -61,20 +61,31 @@ public class MainFrame extends JFrame implements Runnable{
 			setVisible(false);
 			dispose();
 		}
+		setResizable(false);
+		getContentPane().setPreferredSize(size);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+
 		moveCounter = new JTextArea();
 		moveCounter.setText("Moves: 0");
+		moveCounter.setBackground(this.getBackground());
 		moveCounter.setPreferredSize(new Dimension(80,20));
-		this.setResizable(false);
-		this.getContentPane().setPreferredSize(size);
 		moveCounter.setEditable(false);
+		moveCounter.setBounds(632,20,80,20);
+		add(moveCounter);
+
 		daGame = new RushHourGame(carlist);
 		add(daGame.getPanel());
 		daGame.getPanel().setBounds(10,10,602,602);
-		moveCounter.setBounds(620,100,80,20);
-		add(moveCounter);
+
 		add(gm.resetButt);
-		gm.resetButt.setBounds(620,20,80,25);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		gm.resetButt.setBounds(620,50,80,25);
+
+		add(gm.solveButt);
+		gm.solveButt.setBounds(620,580,80,25);
+
+		add(gm.hintButt);
+		gm.hintButt.setBounds(620,540,80,25);
+
 	}	
 
 	public static boolean isInteger(String s) {
@@ -100,7 +111,7 @@ public class MainFrame extends JFrame implements Runnable{
 			if ((sCurrentLine = br.readLine()) != null) {//get grid dimensions
 				String delims = "[ ]+";
 				String[] tokens = sCurrentLine.split(delims);
-				
+
 				for(int i = 0; i<tokens.length; i++){
 					if(tokens.length != 2 || !isInteger(tokens[i]) || Integer.parseInt(tokens[i])<1){
 						System.out.println("ERROR: Level " + levelCount + " does not have valid grid dimensions!\nProgram terminated.");//close the game if grid is invalid
@@ -162,7 +173,7 @@ public class MainFrame extends JFrame implements Runnable{
 				quitGame();
 				return;
 			}
-	
+
 		} catch (IOException e) {//exception handling
 			e.printStackTrace();
 		} finally {
@@ -196,7 +207,7 @@ public class MainFrame extends JFrame implements Runnable{
 	public void run() {
 		pack();
 		if(closeGame){
-			
+
 		}
 		if(gameWon){
 			//render last move, display appropriate message, and initialize the next level
@@ -222,7 +233,7 @@ public class MainFrame extends JFrame implements Runnable{
 		if(!reset){
 			if(levelCount <= numLevels){//check if we've exhausted all our levels
 				levelCount++;
-				
+
 			}
 			else{
 				resetLevels();
@@ -247,8 +258,12 @@ public class MainFrame extends JFrame implements Runnable{
 		setVisible(false);
 		dispose();
 	}
-	
+
 	public static void puzzleSolved(){
 		gameWon = true;
+	}
+
+	public static void startSolver(){
+		daGame.solve();
 	}
 }

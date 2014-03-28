@@ -92,12 +92,12 @@ public class GamePanel extends JPanel implements MouseInputListener {
 				repaint();
 			}
 			if((cars[0]==carPressed) && (cars[0].getX() + cars[0].getWidth() == CarRect.getTileSize() * tileWidth)){
-			    gameRunning = false;
-			    GameMenu.nextLevel();
-			   }
+				gameRunning = false;
+				GameMenu.nextLevel();
+			}
 			lastPressPoint = null;
 			carPressed = null;
-			
+
 		}
 	}
 	@Override
@@ -135,6 +135,10 @@ public class GamePanel extends JPanel implements MouseInputListener {
 
 	public static int getTileWidth(){
 		return tileWidth;
+	}
+
+	public static void stopGame(){
+		gameRunning=false;
 	}
 
 	public static int getTileHeight(){
