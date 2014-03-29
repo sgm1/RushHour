@@ -8,6 +8,7 @@ import java.util.LinkedList;
 public class RushSolver extends Thread{
 	private int[] dirsAllowed;
 	private boolean isSolved;
+	private int solveXSide;
 	private ActionListener eventHandler;
 	private HashSet<GridState> visited;
 	private GridState lastUsed;
@@ -112,10 +113,12 @@ public class RushSolver extends Thread{
 		for (int i = 1; i < dirsAllowed.length; ++i){
 			dirsAllowed[i] = carDirs[i - 1];
 		}
+		solveXSide = initGrid.length - 1;// left
+		//solveXSide = 0;// right side
 		if (dirsAllowed[1] == 1){//sanity check
 			boolean throwIll = true;
 			for (int i = 0; i < initGrid[0].length; ++i){
-				if (initGrid[0][i] == 1){
+				if (initGrid[solveXSide][i] == 1){
 					throwIll = false;
 					break;
 				}
@@ -305,10 +308,9 @@ public class RushSolver extends Thread{
 
 	private void checkIsSolution(GridState gr) {
 		int [][] grid = gr.getGrid();
-		int lx = grid.length - 1;
 		//int lx = 0;
 		for (int y = 0; y < grid[0].length; ++y){
-			if (grid[lx][y] == 1){// if last x has value 1, assume right side
+			if (grid[solveXSide][y] == 1){// if last x has value 1, assume right side
 				isSolved = true;
 				lastStep = gr;
 				visited.add(gr);

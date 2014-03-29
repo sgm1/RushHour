@@ -24,7 +24,7 @@ public class MainFrame extends JFrame implements Runnable{
 
 	private static JTextArea moveCounter;
 	private static ArrayList<CarRect> carlist = new ArrayList<CarRect>();
-	private static int numLevels = 12;
+	private static int numLevels = 6;
 	private static int levelCount = 1;
 	private static boolean closeGame = false;
 	private static int carsMade;
@@ -104,7 +104,7 @@ public class MainFrame extends JFrame implements Runnable{
 		carsMade = 0;
 		try {
 			//TODO put back the other one after levels added
-			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("proj3f.data"));
+			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("proj3"+ (char)('a' + levelCount) +".data"));
 			//InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("level" + levelCount + ".data"));
 			String sCurrentLine;
 			br = new BufferedReader(temp);
@@ -233,9 +233,8 @@ public class MainFrame extends JFrame implements Runnable{
 		if(!reset){
 			if(levelCount <= numLevels){//check if we've exhausted all our levels
 				levelCount++;
-
 			}
-			else{
+			if (levelCount == numLevels){
 				resetLevels();
 				return;
 			}

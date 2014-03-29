@@ -132,7 +132,7 @@ public class RushHourGame implements ActionListener{
 			}
 			System.out.println("Solve activated.");
 			solveActivated=false;
-			GamePanel.stopGame();
+			//GamePanel.stopGame();
 			startSolveAnimation();
 		} 
 		else if (e.getSource() == solveAniTimer){
@@ -140,16 +140,25 @@ public class RushHourGame implements ActionListener{
 			//TODO when dialog window is closed, open up next level
 			if (movesToSolve.isEmpty()){
 				solveAniTimer.stop();
+				MainFrame.puzzleSolved();
+				GameMenu.nextLevel();
 				return;
 			}
 			Triple<Integer, Integer, Integer> curMove = movesToSolve.remove();
+			GUIPanel.movePiece(curMove);
+			/*
 			if (curMove != null){
+				
 				System.out.println("Move piece " + curMove.from +
 						" in dir " + curMove.dir +
 						" by " + curMove.spaces + " space(s)");
+						
 			}
+			*/
 			if (movesToSolve.isEmpty()){
 				solveAniTimer.stop();
+				//MainFrame.puzzleSolved();
+				//GameMenu.nextLevel();
 				return;
 			}
 		}

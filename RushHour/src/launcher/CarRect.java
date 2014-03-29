@@ -44,15 +44,16 @@ public class CarRect extends Rectangle {
 
 	}
 
-	public void dropByPoint(Point p, CarRect[] cars) {
-		moveByPoint(p, cars);
+	public void dropByPoint(Point p, CarRect[] cars, boolean fromSolver) {
+		moveByPoint(p, cars, fromSolver);
+		System.out.println("Droped by: " + p.toString());
 		x = ((x + tileDim / 2) / tileDim) * tileDim;
 		y = ((y + tileDim / 2) / tileDim) * tileDim;
 		realPoint = null;
 		isGhosting = false;
 	}
 
-	public void moveByPoint(Point p, CarRect[] cars) {
+	public void moveByPoint(Point p, CarRect[] cars, boolean fromSolver) {
 		if (!isGhosting) {
 			realPoint = this.getLocation();
 			isGhosting = true;
@@ -71,6 +72,9 @@ public class CarRect extends Rectangle {
 			y = p.y;
 		}
 		double dis = Math.sqrt((tempX - x)*(tempX - x)+(tempY - y)*(tempY - y));
+		
+		if (fromSolver)
+			dis = 0;
 
 		for(CarRect t: cars){
 			if ((t != this && this.intersects(t)) || dis > tileDim * 1.5){

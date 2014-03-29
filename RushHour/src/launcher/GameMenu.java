@@ -7,7 +7,7 @@ import javax.swing.*;
 public class GameMenu extends JMenuBar implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	private static MainFrame myFrame;
-	JButton resetButt, solveButt, hintButt; //Reset Button
+	public JButton resetButt, solveButt, hintButt; //Reset Button
 
 	public GameMenu(MainFrame m){
 		myFrame = m;

@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
 import logic.RushHourGame;
+import logic.Triple;
 public class GamePanel extends JPanel implements MouseInputListener {
 
 	private int numCars = 4;
@@ -69,7 +70,58 @@ public class GamePanel extends JPanel implements MouseInputListener {
 				carPressed = null;
 			}
 		}
+	}
+	
+	public void movePiece(Triple<Integer,Integer,Integer> curMove){
+		if (curMove == null) return;
+		
+		System.out.println("Move piece " + curMove.from +
+				" in dir " + curMove.dir +
+				" by " + curMove.spaces + " space(s)");
+		
+		if(gameRunning){
+			CarRect t = cars[curMove.from - 1];
+			System.out.println(t.getLocation().toString());
+			if (t != null){
+				lastPressPoint = new Point(1, 1);
+				savedX = t.getX();
+				savedY = t.getY();
+				carPressed = t;
+			}
+			
 
+			if (carPressed != null){
+				int dx = 0,
+					dy = 0;
+				int direction = curMove.from.intValue();
+				if (direction == 2){
+					dx = 0;
+					dy = curMove.spaces;
+				} else if (direction == 8){
+					dx = 0;
+					dy = -curMove.spaces;
+				} else if (direction == 4){
+					dx = -curMove.spaces;
+					dy = 0;
+				} else {
+					dx = curMove.spaces;
+					dy = 0;
+				}
+				int x =  t.x + dx * CarRect.getTileSize() - 1;
+				int y =  t.y + dy * CarRect.getTileSize() - 1;
+				carPressed.dropByPoint(new Point(x, y),cars, true);
+				if(carPressed.getX() != savedX || carPressed.getY() != savedY)
+					numMoves++;
+				repaint();
+			}
+			if((cars[0]==carPressed) && (cars[0].getX() + cars[0].getWidth() == CarRect.getTileSize() * tileWidth)){
+				gameRunning = false;
+				GameMenu.nextLevel();
+			}
+			lastPressPoint = null;
+			carPressed = null;
+
+		}
 	}
 
 	private CarRect onCar(Point p){
@@ -86,7 +138,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 			if (carPressed != null){
 				int x =  lastPressPoint.x + e.getPoint().x;
 				int y =  lastPressPoint.y + e.getPoint().y;
-				carPressed.dropByPoint(new Point(x, y),cars);
+				carPressed.dropByPoint(new Point(x, y),cars, false);
 				if(carPressed.getX() != savedX || carPressed.getY() != savedY)
 					numMoves++;
 				repaint();
@@ -119,7 +171,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		if (carPressed != null){
 			int x =  lastPressPoint.x + e.getPoint().x;
 			int y =  lastPressPoint.y + e.getPoint().y;
-			carPressed.moveByPoint(new Point(x, y),cars);
+			carPressed.moveByPoint(new Point(x, y),cars, false);
 			repaint();
 		}
 	}
