@@ -87,7 +87,7 @@ public class GameMenu extends JMenuBar implements ActionListener{
 		}
 		if("Hint".equals(e.getActionCommand())){ //Solve the puzzle
 			System.out.println("Hint button clicked!");
-			//MainFrame.startSolver();
+			MainFrame.startHint();
 			//TODO: allow for the first move from the solver to displayed in a dialog window
 		}
 		else if("exit".equals(e.getActionCommand())){ //Close Game Window and stop running

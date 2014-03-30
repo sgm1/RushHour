@@ -269,4 +269,8 @@ public class MainFrame extends JFrame implements Runnable{
 	public static void startSolver(){
 		daGame.solve();
 	}
+
+	public static void startHint() {
+		daGame.hint();
+	}
 }

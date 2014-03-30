@@ -30,9 +30,11 @@ public class RushHourGame implements ActionListener{
 	private LinkedList<Triple<Integer, Integer, Integer>> movesToSolve;
 	private Timer solveAniTimer;
 	private boolean solveActivated;
+	private boolean isHint;
 
 	public RushHourGame(ArrayList<CarRect> carlist){
 		solveActivated = false;
+		isSovling = 0;
 		secWidth = CarRect.getTileSize();
 		secHeight = CarRect.getTileSize();
 		stepsPerMove = 20;
@@ -70,8 +72,14 @@ public class RushHourGame implements ActionListener{
 	}
 
 	public void solve(){
+		isHint = false;
+		if (isSovling == 1){
+			System.out.println("Is solving solve");
+			return;
+		}
 		isSovling = 1;
 		setSectors();
+		System.out.println("solving..");
 		try{
 			solver = new RushSolver(sector, dirs);
 		}catch(IllegalArgumentException e){
@@ -79,7 +87,6 @@ public class RushHourGame implements ActionListener{
 			GameMenu.skipLevel();
 			return;
 		}
-		System.out.println("solving..");
 		solver.addActionListioner(this);
 		solver.start();
 
@@ -120,43 +127,63 @@ public class RushHourGame implements ActionListener{
 			startSolveAnimation();
 		} 
 		else if (e.getSource() == solveAniTimer){
-			if (MainFrame.isSolved())
+			if (MainFrame.isSolved()){
+				isSovling = 0;
 				return;
-			//TODO when movesToSolve is empty, show dialog message and return control back to the user
-			//TODO when dialog window is closed, open up next level
+			}
+			//TODO Prevent another solve click?
 			if (movesToSolve.isEmpty()){
+				isSovling = 0;
 				solveAniTimer.stop();
-				//MainFrame.puzzleSolved();
-				//GameMenu.nextLevel();
 				return;
 			}
 			Triple<Integer, Integer, Integer> curMove = movesToSolve.remove();
 			GUIPanel.movePiece(curMove);
-			/*
-			if (curMove != null){
-				
-				System.out.println("Move piece " + curMove.from +
-						" in dir " + curMove.dir +
-						" by " + curMove.spaces + " space(s)");
-						
-			}
-			*/
 			if (movesToSolve.isEmpty()){
+				isSovling = 0;
 				solveAniTimer.stop();
-				//MainFrame.puzzleSolved();
-				//GameMenu.nextLevel();
 				return;
 			}
+			if (isHint && curMove != null){
+				isSovling = 0;
+				solveAniTimer.stop();
+				return;
+			}
+			if (isHint)
+				actionPerformed(e);
 		}
 	}
 
 	private void startSolveAnimation(){
 		if (movesToSolve.isEmpty()){
+			isSovling = 0;
 			GameMenu.nextLevel();
+			return;
 		}
 		solveAniTimer = new Timer(1000, this);
 		solveAniTimer.setInitialDelay(0);//fire first move right away (null)
 		solveAniTimer.start();
+	}
+
+	public void hint() {
+		isHint = true;
+		if (isSovling == 1){
+			System.out.println("Is solving hint");
+			return;
+		}
+		isSovling = 1;
+		setSectors();
+		System.out.println("solving..");
+		try{
+			solver = new RushSolver(sector, dirs);
+		}catch(IllegalArgumentException e){
+			System.out.println("Z piece canot move horiziontal, unsolveable");
+			isSovling = 0;
+			GameMenu.skipLevel();
+			return;
+		}
+		solver.addActionListioner(this);
+		solver.start();
 	}
 
 
