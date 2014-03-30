@@ -94,7 +94,8 @@ public class GameMenu extends JMenuBar implements ActionListener{
 			myFrame.quitGame();
 		}
 		else if("help".equals(e.getActionCommand())){ //Pop up help dialog
-			JOptionPane.showMessageDialog(null,"Rules:\n\n- Left click on a tile to reveal the square.\n- Numbers on tiles represent the number of adjacent bombs.\n- Right click on a tile to mark it as a bomb.\n- Right click again to mark it as a possible bomb.\n- Right click a third time to clear markings.\n- The game is over once you click on a bomb.\n- To win, reveal all tiles that are not bombs.\n- There is a counter at the bottom representing the number of bombs left.\n- In order to be on the high score list, you must have one of the top ten fastest times!\n\n");
+			JOptionPane.showMessageDialog(null,"Rules:\n\n- Slide the blocks using left click and drag\n"
+					+ "- Purpose is to get the 'z' block to the right side\n\n");
 		}
 		else if("About".equals(e.getActionCommand())){ //Pop up About Dialog
 			JOptionPane.showMessageDialog(null,"By: Mike Albanese; Shanon Mathai\n\n                  CS342\n" );
