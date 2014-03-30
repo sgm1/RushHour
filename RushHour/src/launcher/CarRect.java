@@ -46,7 +46,7 @@ public class CarRect extends Rectangle {
 
 	public void dropByPoint(Point p, CarRect[] cars, boolean fromSolver) {
 		moveByPoint(p, cars, fromSolver);
-		System.out.println("Droped by: " + p.toString());
+		//System.out.println("Droped by: " + p.toString());
 		x = ((x + tileDim / 2) / tileDim) * tileDim;
 		y = ((y + tileDim / 2) / tileDim) * tileDim;
 		realPoint = null;

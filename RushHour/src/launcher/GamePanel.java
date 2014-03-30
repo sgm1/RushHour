@@ -18,7 +18,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	private int numCars = 4;
 	//private List<CarRect> cars = new ArrayList<CarRect>();
 	private CarRect[] cars = new CarRect[0];
-	private Point lastPressPoint;
+	private Point lastPressOffset;
 	private RushHourGame game;//to communicate key events
 	//should communicate on release only
 	private CarRect carPressed;
@@ -60,13 +60,13 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		if(gameRunning){
 			CarRect t = onCar(e.getPoint());
 			if (t != null){
-				lastPressPoint = new Point(t.x - e.getPoint().x, t.y - e.getPoint().y);
+				lastPressOffset = new Point(t.x - e.getPoint().x, t.y - e.getPoint().y);
 				savedX = t.getX();
 				savedY = t.getY();
 				carPressed = t;
 			}
 			else {
-				lastPressPoint = null;
+				lastPressOffset = null;
 				carPressed = null;
 			}
 		}
@@ -81,9 +81,10 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		
 		if(gameRunning){
 			CarRect t = cars[curMove.from - 1];
-			System.out.println(t.getLocation().toString());
+			System.out.println("from (x, y): (" + t.x + ", " + t.y + ")");
+			//System.out.println(t.getLocation().toString());
 			if (t != null){
-				lastPressPoint = new Point(1, 1);
+				lastPressOffset = new Point(2, 2);
 				savedX = t.getX();
 				savedY = t.getY();
 				carPressed = t;
@@ -93,22 +94,24 @@ public class GamePanel extends JPanel implements MouseInputListener {
 			if (carPressed != null){
 				int dx = 0,
 					dy = 0;
-				int direction = curMove.from.intValue();
+				int direction = curMove.dir.intValue();
+				int spaces = curMove.spaces.intValue();
 				if (direction == 2){
 					dx = 0;
-					dy = curMove.spaces;
+					dy = spaces;
 				} else if (direction == 8){
 					dx = 0;
-					dy = -curMove.spaces;
-				} else if (direction == 4){
-					dx = -curMove.spaces;
+					dy = -spaces;
+				} else if (direction == 6){
+					dx = spaces;
 					dy = 0;
 				} else {
-					dx = curMove.spaces;
+					dx = -spaces;
 					dy = 0;
 				}
-				int x =  t.x + dx * CarRect.getTileSize() - 1;
-				int y =  t.y + dy * CarRect.getTileSize() - 1;
+				int x =  t.x + dx * CarRect.getTileSize() + lastPressOffset.x;
+				int y =  t.y + dy * CarRect.getTileSize() + lastPressOffset.y;
+				System.out.println("to (x, y): (" + x + ", " + y + ")");
 				carPressed.dropByPoint(new Point(x, y),cars, true);
 				if(carPressed.getX() != savedX || carPressed.getY() != savedY)
 					numMoves++;
@@ -118,7 +121,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 				gameRunning = false;
 				GameMenu.nextLevel();
 			}
-			lastPressPoint = null;
+			lastPressOffset = null;
 			carPressed = null;
 
 		}
@@ -136,8 +139,8 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	public void mouseReleased(MouseEvent e) {
 		if(gameRunning){
 			if (carPressed != null){
-				int x =  lastPressPoint.x + e.getPoint().x;
-				int y =  lastPressPoint.y + e.getPoint().y;
+				int x =  lastPressOffset.x + e.getPoint().x;
+				int y =  lastPressOffset.y + e.getPoint().y;
 				carPressed.dropByPoint(new Point(x, y),cars, false);
 				if(carPressed.getX() != savedX || carPressed.getY() != savedY)
 					numMoves++;
@@ -147,7 +150,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 				gameRunning = false;
 				GameMenu.nextLevel();
 			}
-			lastPressPoint = null;
+			lastPressOffset = null;
 			carPressed = null;
 
 		}
@@ -169,8 +172,8 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (carPressed != null){
-			int x =  lastPressPoint.x + e.getPoint().x;
-			int y =  lastPressPoint.y + e.getPoint().y;
+			int x =  lastPressOffset.x + e.getPoint().x;
+			int y =  lastPressOffset.y + e.getPoint().y;
 			carPressed.moveByPoint(new Point(x, y),cars, false);
 			repaint();
 		}

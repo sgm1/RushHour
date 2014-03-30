@@ -113,8 +113,8 @@ public class RushSolver extends Thread{
 		for (int i = 1; i < dirsAllowed.length; ++i){
 			dirsAllowed[i] = carDirs[i - 1];
 		}
-		solveXSide = initGrid.length - 1;// left
-		//solveXSide = 0;// right side
+		//solveXSide = initGrid.length - 1;// left
+		solveXSide = 0;// right side
 		if (dirsAllowed[1] == 1){//sanity check
 			boolean throwIll = true;
 			for (int i = 0; i < initGrid[0].length; ++i){

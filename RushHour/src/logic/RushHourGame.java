@@ -93,6 +93,7 @@ public class RushHourGame implements ActionListener{
 			solver = new RushSolver(sector, dirs);
 		}catch(IllegalArgumentException e){
 			System.out.println("Z piece canot move horiziontal, unsolveable");
+			GameMenu.skipLevel();
 			return;
 		}
 		System.out.println("solving..");
@@ -140,8 +141,8 @@ public class RushHourGame implements ActionListener{
 			//TODO when dialog window is closed, open up next level
 			if (movesToSolve.isEmpty()){
 				solveAniTimer.stop();
-				MainFrame.puzzleSolved();
-				GameMenu.nextLevel();
+				//MainFrame.puzzleSolved();
+				//GameMenu.nextLevel();
 				return;
 			}
 			Triple<Integer, Integer, Integer> curMove = movesToSolve.remove();
