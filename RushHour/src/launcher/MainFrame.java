@@ -261,6 +261,10 @@ public class MainFrame extends JFrame implements Runnable{
 	public static void puzzleSolved(){
 		gameWon = true;
 	}
+	
+	public static boolean isSolved(){
+		return gameWon;
+	}
 
 	public static void startSolver(){
 		daGame.solve();

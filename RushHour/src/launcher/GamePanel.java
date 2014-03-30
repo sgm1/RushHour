@@ -84,7 +84,6 @@ public class GamePanel extends JPanel implements MouseInputListener {
 			System.out.println("from (x, y): (" + t.x + ", " + t.y + ")");
 			//System.out.println(t.getLocation().toString());
 			if (t != null){
-				lastPressOffset = new Point(2, 2);
 				savedX = t.getX();
 				savedY = t.getY();
 				carPressed = t;
@@ -109,9 +108,11 @@ public class GamePanel extends JPanel implements MouseInputListener {
 					dx = -spaces;
 					dy = 0;
 				}
-				int x =  t.x + dx * CarRect.getTileSize() + lastPressOffset.x;
-				int y =  t.y + dy * CarRect.getTileSize() + lastPressOffset.y;
+				int x =  t.x + dx * CarRect.getTileSize();
+				int y =  t.y + dy * CarRect.getTileSize();
 				System.out.println("to (x, y): (" + x + ", " + y + ")");
+				t.x = x;
+				t.y = y;
 				carPressed.dropByPoint(new Point(x, y),cars, true);
 				if(carPressed.getX() != savedX || carPressed.getY() != savedY)
 					numMoves++;

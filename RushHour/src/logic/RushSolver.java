@@ -113,8 +113,8 @@ public class RushSolver extends Thread{
 		for (int i = 1; i < dirsAllowed.length; ++i){
 			dirsAllowed[i] = carDirs[i - 1];
 		}
-		//solveXSide = initGrid.length - 1;// left
-		solveXSide = 0;// right side
+		solveXSide = initGrid.length - 1;// left
+		//solveXSide = 0;// right side
 		if (dirsAllowed[1] == 1){//sanity check
 			boolean throwIll = true;
 			for (int i = 0; i < initGrid[0].length; ++i){
@@ -429,7 +429,7 @@ public class RushSolver extends Thread{
 		int [][] temp;
 		while(canMoveDown(gr, val, x, y, numSpaces)){
 			temp = clone2D(gr);
-			for (int tX = 0; tX < width; ++tX){
+			for (int tX = x; tX < width; ++tX){
 				for (int tY = height - 1; tY >= 0; --tY){//bot to top to prevent overwrite
 					if (gr[tX][tY] == val){//"map" original into temp transformed
 						temp[tX][tY] = 0;

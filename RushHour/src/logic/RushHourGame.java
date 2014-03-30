@@ -54,33 +54,16 @@ public class RushHourGame implements ActionListener{
 
 	private void setSectors(){//TODO Change to support oversized blocks? 
 		int x, y, w, h;
+
+		sector = new int[GamePanel.getTileWidth()][GamePanel.getTileHeight()];
 		for (int i = 0; i < cars.size(); i++){
-			x = cars.get(i).x;
-			y = cars.get(i).y;
-			w = cars.get(i).width - 1;// -1 for the int div round off
-			h = cars.get(i).height - 1;// -1 for the int div round off
-
-			if (w  < secWidth && h < secWidth){
-				sector[(x + w) / secWidth][(y + h) / secHeight] = i + 1;
-				w -= secWidth;
-			}
-
-			//following assumes 1 side will be of width 1
-			while(w > secWidth){
-				sector[(x + w) / secWidth][(y + h) / secHeight] = i + 1;
-				w -= secWidth;
-				if (w  < secWidth){
-					sector[(x + w) / secWidth][(y + h) / secHeight] = i + 1;
-					w -= secWidth;
-				}
-			}
-			//following assumes 1 side will be of width 1
-			while(h > secHeight){
-				sector[(x + w) / secWidth][(y + h) / secHeight] = i + 1;
-				h -= secHeight;
-				if (h < secHeight){
-					sector[(x + w) / secWidth][(y + h) / secHeight] = i + 1;
-					h -= secHeight;
+			x = cars.get(i).x / CarRect.getTileSize();
+			y = cars.get(i).y / CarRect.getTileSize();
+			w = cars.get(i).width / CarRect.getTileSize();// -1 for the int div round off
+			h = cars.get(i).height / CarRect.getTileSize();// -1 for the int div round off
+			for (int j = 0; j < w; ++j){
+				for (int k = 0; k < h; ++k){
+					sector[x + j][y + k] = i + 1;
 				}
 			}
 		}
@@ -137,6 +120,8 @@ public class RushHourGame implements ActionListener{
 			startSolveAnimation();
 		} 
 		else if (e.getSource() == solveAniTimer){
+			if (MainFrame.isSolved())
+				return;
 			//TODO when movesToSolve is empty, show dialog message and return control back to the user
 			//TODO when dialog window is closed, open up next level
 			if (movesToSolve.isEmpty()){
@@ -166,6 +151,9 @@ public class RushHourGame implements ActionListener{
 	}
 
 	private void startSolveAnimation(){
+		if (movesToSolve.isEmpty()){
+			GameMenu.nextLevel();
+		}
 		solveAniTimer = new Timer(1000, this);
 		solveAniTimer.setInitialDelay(0);//fire first move right away (null)
 		solveAniTimer.start();
