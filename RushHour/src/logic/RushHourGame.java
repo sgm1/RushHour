@@ -127,7 +127,7 @@ public class RushHourGame implements ActionListener{
 	/**
 	 * Returns the GamePanel that is currently being used
 	 * in this instance
-	 * @return
+	 * @return GamePanel being used
 	 */
 	public GamePanel getPanel(){
 		return GUIPanel;

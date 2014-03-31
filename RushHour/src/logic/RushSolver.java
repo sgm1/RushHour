@@ -304,7 +304,7 @@ public class RushSolver extends Thread{
 	 * @param x x coordinate in grid[x][y]
 	 * @param y y coordinate in grid[x][y]
 	 * @param num Number of spaces to attempt move right
-	 * @return
+	 * @return True if valid, false otherwise
 	 */
 	private boolean canMoveUp(int[][] gr, int val, int x, int y, int num){
 		//assumes top left provided
