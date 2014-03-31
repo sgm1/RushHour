@@ -4,11 +4,24 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import javax.swing.*;
 
+/**
+ * Create the JMenuBar to serve as the menu
+ * on the MainFrame
+ * 
+ * @author Mike Albanese
+ * @author Shanon Mathai
+ *
+ */
 public class GameMenu extends JMenuBar implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	private static MainFrame myFrame;
 	public JButton resetButt, solveButt, hintButt; //Reset Button
 
+	/**
+	 * Creates the game menu
+	 * 
+	 * @param m MainFrame to use 
+	 */
 	public GameMenu(MainFrame m){
 		myFrame = m;
 		JMenu gameMenu = new JMenu("Game"), helpMenu = new JMenu("Help"); //create the two menus
@@ -63,20 +76,33 @@ public class GameMenu extends JMenuBar implements ActionListener{
 		hintButt.setFocusPainted(false);
 
 	}
+	
+	/**
+	 * Reset the level
+	 */
 	public static void resetLevel(){
 		myFrame.newLevel(true);
 	}
 
+	/**
+	 * Load next level
+	 */
 	public static void nextLevel(){
 		JOptionPane.showMessageDialog(null,"Puzzle solved! Loading next level...");
 		myFrame.newLevel(false);
 	}
 
+	/**
+	 * Puzzle unsolvable, load next
+	 */
 	public static void skipLevel(){
 		JOptionPane.showMessageDialog(null, "Puzzle is not solvable! Loading next level...");
 		myFrame.newLevel(false);
 	}
 
+	/**
+	 * Handles all the Menu click events
+	 */
 	public void actionPerformed(ActionEvent e) {
 		if("Reset".equals(e.getActionCommand())){ //Reset the game
 			myFrame.newLevel(true);

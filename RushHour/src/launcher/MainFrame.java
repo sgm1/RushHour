@@ -15,6 +15,13 @@ import java.io.InputStreamReader;
 import launcher.GamePanel;
 import logic.RushHourGame;
 
+/**
+ * Creates and initializes the GUI
+ * 
+ * @author Shanon Mathai
+ * @author Mike Albanese
+ */
+@SuppressWarnings("serial")
 public class MainFrame extends JFrame implements Runnable{
 	public static int width = 708; //frame width
 	public static int height = 622; //frame height
@@ -41,10 +48,17 @@ public class MainFrame extends JFrame implements Runnable{
 	//for puzzles with more than 61 pieces
 	private static boolean gameWon = false;
 
+	/**
+	 * Starts everything
+	 * @param args Command line arguments (unused)
+	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new MainFrame());
 	}
 
+	/**
+	 * Creates the main GUI, buttons, etc.
+	 */
 	public MainFrame(){
 		super("Rush Hour");
 		size = new Dimension(width,height);
@@ -88,6 +102,11 @@ public class MainFrame extends JFrame implements Runnable{
 
 	}	
 
+	/**
+	 * Return if the string is an integer
+	 * @param s String to parse
+	 * @return True if is int, false otherwise
+	 */
 	public static boolean isInteger(String s) {
 		try { 
 			Integer.parseInt(s); 
@@ -97,6 +116,9 @@ public class MainFrame extends JFrame implements Runnable{
 		return true;
 	}
 
+	/**
+	 * Reads in the file form the current root directory
+	 */
 	private void readInLevel() {//read in from file and initialize grid/cars
 		BufferedReader br = null;
 		int lineCount = 0;
@@ -187,6 +209,11 @@ public class MainFrame extends JFrame implements Runnable{
 		}
 	}
 
+	/**
+	 * Gets the next characters for the cars to use,
+	 * uses duplicates when necessary
+	 * @return Next character to use
+	 */
 	private static char getCarText() {//determines what symbol will be displayed for each car using carsMade
 		char result;
 		if(carsMade == 0)
@@ -203,6 +230,9 @@ public class MainFrame extends JFrame implements Runnable{
 		return result;
 	}
 
+	/**
+	 * Starts the JFrame's thread
+	 */
 	@Override
 	public void run() {
 		pack();
@@ -217,18 +247,35 @@ public class MainFrame extends JFrame implements Runnable{
 		this.setResizable(false);
 	}
 
+	/**
+	 * Get the window's width
+	 * @return Window's width in pixels
+	 */
 	public static int getWinWidth(){
 		return winWidth;
 	}
 
+	/**
+	 * Returns the window's pixel height
+	 * @return Height of the window 
+	 */
 	public static int getWinHeight(){
 		return winHeight;
 	}
 
+	/**
+	 * Updates the move counter to specified value
+	 * 
+	 * @param numMoves Value to set to moves
+	 */
 	public static void setMoveCounter(int numMoves){//updates the move counter in the GUI
 		moveCounter.setText("Moves: " + numMoves);
 	}
 
+	/**
+	 * Reset current level or starts new level
+	 * @param reset True if for rest, false for next level
+	 */
 	public void newLevel(boolean reset){//read in the next level file and reset variables
 		if(!reset){
 			if(levelCount <= numLevels){//check if we've exhausted all our levels
@@ -249,27 +296,50 @@ public class MainFrame extends JFrame implements Runnable{
 		// TODO
 	}
 
+	/**
+	 * Used to reset the levels so
+	 * game boards loop 
+	 */
 	private static void resetLevels() {//after levels have been exhausted, start from the beginning
 		levelCount = 1;
 	}
 
+	/**
+	 * Handles the quit event
+	 */
 	public void quitGame(){
 		setVisible(false);
 		dispose();
 	}
 
+	/**
+	 * Sets the puzzle to the solved state
+	 */
 	public static void puzzleSolved(){
 		gameWon = true;
 	}
 	
+	/**
+	 * Where the current game is in the win
+	 * state
+	 * @return True if already won
+	 */
 	public static boolean isSolved(){
 		return gameWon;
 	}
 
+	/**
+	 * Pipes the GUI button press to the 
+	 * RushHourGame instance for solve
+	 */
 	public static void startSolver(){
 		daGame.solve();
 	}
 
+	/**
+	 * Pipes the GUI button press to the 
+	 * RushHourGame instance for hint
+	 */
 	public static void startHint() {
 		daGame.hint();
 	}

@@ -13,6 +13,13 @@ import launcher.GameMenu;
 import launcher.GamePanel;
 import launcher.MainFrame;
 
+/**
+ * Creates the GUI for the game to
+ * use and links to the solver
+ * 
+ * @author Shanon Mathai
+ * @author Mike Albanese
+ */
 public class RushHourGame implements ActionListener{
 	private final int secWidth, secHeight;
 	private int isSovling = 0;
@@ -32,6 +39,11 @@ public class RushHourGame implements ActionListener{
 	private boolean solveActivated;
 	private boolean isHint;
 
+	/**
+	 * Creates the game and the GUI for the game aspect
+	 * 
+	 * @param carlist "Cars" read in from file
+	 */
 	public RushHourGame(ArrayList<CarRect> carlist){
 		solveActivated = false;
 		isSovling = 0;
@@ -50,10 +62,11 @@ public class RushHourGame implements ActionListener{
 
 		GUIPanel = new GamePanel(MainFrame.getWinWidth(), MainFrame.getWinHeight(), this);
 		GUIPanel.setCars(cars);
-
-		//solve();
 	}
 
+	/**
+	 * Sets the sector representation of the current board
+	 */
 	private void setSectors(){//TODO Change to support oversized blocks? 
 		int x, y, w, h;
 
@@ -71,6 +84,11 @@ public class RushHourGame implements ActionListener{
 		}
 	}
 
+	/**
+	 * Initiates the thread to handle the
+	 * computation for the solving of the 
+	 * current board
+	 */
 	public void solve(){
 		isHint = false;
 		if (isSovling == 1){
@@ -89,10 +107,12 @@ public class RushHourGame implements ActionListener{
 		}
 		solver.addActionListioner(this);
 		solver.start();
-
-
 	}
 
+	/**
+	 * Prints the array representation of the 
+	 * current grid
+	 */
 	private void printSectors(){
 		for (int i = 0; i < sector.length; ++i){
 			if(i>0)
@@ -104,11 +124,19 @@ public class RushHourGame implements ActionListener{
 		System.out.println();
 	}
 
+	/**
+	 * Returns the GamePanel that is currently being used
+	 * in this instance
+	 * @return
+	 */
 	public GamePanel getPanel(){
 		return GUIPanel;
 	}
 
-	@Override
+	/**
+	 * Handles the threaded events
+	 * 
+	 */ @Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == solver){
 			//DONE Prevent solver before this is called
@@ -154,6 +182,9 @@ public class RushHourGame implements ActionListener{
 		}
 	}
 
+	/**
+	 * Launches the animation for the solve
+	 */
 	private void startSolveAnimation(){
 		if (movesToSolve.isEmpty()){
 			isSovling = 0;
@@ -165,6 +196,9 @@ public class RushHourGame implements ActionListener{
 		solveAniTimer.start();
 	}
 
+	/**
+	 * Launches the hint event
+	 */
 	public void hint() {
 		isHint = true;
 		if (isSovling == 1){

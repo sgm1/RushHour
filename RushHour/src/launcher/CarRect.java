@@ -6,6 +6,13 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Random;
 
+/**
+ * Rectangle to represent the
+ * cars in the GamePanel
+ *  
+ * @author Shanon Mathai
+ * @author Mike Albanese
+ */
 public class CarRect extends Rectangle {
 	private static int tileDim;
 	private static Rectangle[] borders = new Rectangle[4]; 
@@ -27,10 +34,22 @@ public class CarRect extends Rectangle {
 		symbol = text;
 	}
 
+	/**
+	 * Get the movement capabilities
+	 * where 0 means horizontal movement only,
+	 * 1 means vertical only, 2 means both
+	 * 
+	 * @return 0, 1 or 2, as described above
+	 */
 	public int getDir(){
 		return moveCapabilites;
 	}
 
+	/**
+	 * Draw this Rectangle on the
+	 * Graphic component
+	 * @param g Graphics to draw on
+	 */
 	public void draw(Graphics g) {
 		g.setColor(col);
 		g.fillRect(this.x, this.y, this.width, this.height);
@@ -44,6 +63,13 @@ public class CarRect extends Rectangle {
 
 	}
 
+	/**
+	 * Handles the mouse release event
+	 * if the CarRect was in use
+	 * @param p Point to drop by
+	 * @param cars All CarRects on the board
+	 * @param fromSolver If Being called form the solver
+	 */
 	public void dropByPoint(Point p, CarRect[] cars, boolean fromSolver) {
 		moveByPoint(p, cars, fromSolver);
 		//System.out.println("Droped by: " + p.toString());
@@ -53,6 +79,13 @@ public class CarRect extends Rectangle {
 		isGhosting = false;
 	}
 
+	/**
+	 * Handles the drag event
+	 * 
+	 * @param p Point to move towards
+	 * @param cars All CarRects on the board
+	 * @param fromSolver If Being called form the solver
+	 */
 	public void moveByPoint(Point p, CarRect[] cars, boolean fromSolver) {
 		if (!isGhosting) {
 			realPoint = this.getLocation();
@@ -90,6 +123,12 @@ public class CarRect extends Rectangle {
 		}
 	}
 
+	/**
+	 * Get the character representation of this
+	 * block
+	 * 
+	 * @return Character used on this block
+	 */
 	public char getSymbol() {
 		return this.symbol;
 	}
@@ -105,10 +144,19 @@ public class CarRect extends Rectangle {
 		borders[3] = new Rectangle(0, MainFrame.getWinHeight(), MainFrame.getWinWidth(), tileDim);
 	}
 
+	/**
+	 * Get the tileSize, should be same as GamePanel
+	 * @return tileSize of the 
+	 */
 	public static int getTileSize(){
 		return tileDim;
 	}
 
+	/**
+	 * Get the border Rectangles to check out
+	 * of bounds
+	 * @return Rectangle array of the borders
+	 */
 	public static Rectangle[] getBorders(){
 		return borders;
 	}

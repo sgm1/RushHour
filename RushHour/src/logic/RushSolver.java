@@ -5,6 +5,13 @@ import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+/**
+ * Handles the solver thread
+ * 
+ * @author Shanon Mathai
+ * @author Mike Albanese
+ *
+ */
 public class RushSolver extends Thread{
 	private int[] dirsAllowed;
 	private boolean isSolved;
@@ -16,16 +23,29 @@ public class RushSolver extends Thread{
 	private LinkedList<GridState> toProcess;
 	private LinkedList<Triple<Integer,Integer,Integer>> solMoves;
 
+	/**
+	 * Used to capture the "snapshot"
+	 * of the current board
+	 * 
+	 * @author Shanon Mathai
+	 *
+	 */
 	private class GridState {
 		private int [][] daMap;
 		private int hashVal;
 		private GridState fromState;
 		private Triple<Integer, Integer, Integer>  source;
 
-		public GridState(int [][] gr, GridState numSteps, Triple<Integer, Integer, Integer>  fromDat){
+		/**
+		 * Create the current board
+		 * @param gr Grid to save
+		 * @param from From state
+		 * @param fromDat Transition information, to this state
+		 */
+		public GridState(int [][] gr, GridState from, Triple<Integer, Integer, Integer>  fromDat){
 			daMap = clone2D(gr);
 			int primes[] = {401, 919};//good hash distribution?
-			fromState = numSteps;
+			fromState = from;
 			source = fromDat;
 
 			int count = 0;
@@ -38,14 +58,26 @@ public class RushSolver extends Thread{
 			}
 		}
 
+		/**
+		 * Get the from state
+		 * @return The previous state from this
+		 */
 		public GridState getFromState(){
 			return fromState;
 		}
 
+		/**
+		 * Get the transition information
+		 * @return transion information as a triple
+		 */
 		public Triple<Integer, Integer, Integer> getFromTransition(){
 			return source;
 		}
 
+		/**
+		 * Checks to see if other object is equal to this
+		 * (used for hashMap)
+		 */
 		@Override
 		public boolean equals(Object other){
 			if (!(other instanceof GridState))
@@ -63,11 +95,20 @@ public class RushSolver extends Thread{
 			return true;
 		}
 
+		/**
+		 * Returns the hashed representation of
+		 * this GridState
+		 */
 		@Override
 		public int hashCode(){
 			return hashVal;
 		}
 
+		/**
+		 * Get the grid in this 
+		 * GridState
+		 * @return Grid saved in the GridState
+		 */
 		public int[][] getGrid(){
 			return daMap.clone();//clone does deep copy (on primitives)
 		}
@@ -83,6 +124,10 @@ public class RushSolver extends Thread{
 		return asd;
 	}
 
+	/**
+	 * Print the grid to the console
+	 * @param sector Grid to print
+	 */
 	private static void printSectors(int[][] sector){
 		System.out.println();
 		for (int i = 0; i < sector.length; ++i){
@@ -134,6 +179,11 @@ public class RushSolver extends Thread{
 		toProcess.addFirst(new GridState(initGrid, null, null));
 	}
 
+	/**
+	 * Used to generate the finals solved information
+	 * 
+	 * @param end Initially the solved state to backtrack
+	 */
 	private void backTracePath(GridState end){
 		if (end != null){
 			backTracePath(end.getFromState());
@@ -142,15 +192,26 @@ public class RushSolver extends Thread{
 		}
 	}
 
-
+	/**
+	 * After solve is complete,
+	 * returns if the grid is solvable
+	 * @return True if solvable, false otherwise
+	 */
 	public boolean isSolvable(){
 		return isSolved;
 	}
 
+	/**
+	 * Get the moves to the solution
+	 * @return LinkedList<Triple<Integer,Integer,Integer>> of the moves to solution
+	 */
 	public LinkedList<Triple<Integer,Integer,Integer>> getMoves(){
 		return solMoves;
 	}
 
+	/**
+	 * Starts the solver's thread
+	 */
 	@Override
 	public void run(){
 		int steps = 0;
@@ -183,19 +244,27 @@ public class RushSolver extends Thread{
 		sendEvent();
 	}
 
+	/**
+	 * Send a custom event to say solver
+	 * is complete
+	 */
 	private void sendEvent(){
 		ActionEvent message = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null);
 		eventHandler.actionPerformed(message);
 	}
 
+	/**
+	 * Sets the ActionListioner
+	 * @param e ActionListioner to use
+	 */
 	public void addActionListioner(ActionListener e){
 		eventHandler = e;
 	}
 
 
 	/**
-	 * Provided the top lect sector of the value 'val',
-	 * decides if piece can move 'num' spaces 
+	 * Provided the top left sector of the value 'val',
+	 * decides if piece can move 'num' spaces left
 	 * (Should support any size rectangles)
 	 * 
 	 * @param gr Grid to check
@@ -203,7 +272,7 @@ public class RushSolver extends Thread{
 	 * @param x x coordinate in grid[x][y]
 	 * @param y y coordinate in grid[x][y]
 	 * @param num Number of spaces to attempt move right
-	 * @return
+	 * @return True if valid, false otherwise
 	 */
 	private boolean canMoveLeft(int[][] gr, int val, int x, int y, int num){
 		//assumes top left provided
@@ -225,6 +294,18 @@ public class RushSolver extends Thread{
 		return false;
 	}
 
+	/**
+	 * Provided the top left sector of the value 'val',
+	 * decides if piece can move 'num' spaces up
+	 * (Should support any size rectangles)
+	 * 
+	 * @param gr Grid to check
+	 * @param val Value of piece in grid
+	 * @param x x coordinate in grid[x][y]
+	 * @param y y coordinate in grid[x][y]
+	 * @param num Number of spaces to attempt move right
+	 * @return
+	 */
 	private boolean canMoveUp(int[][] gr, int val, int x, int y, int num){
 		//assumes top left provided
 		//assumes lower "nums" checked
@@ -245,6 +326,18 @@ public class RushSolver extends Thread{
 		return false;
 	}
 
+	/**
+	 * Provided the top left sector of the value 'val',
+	 * decides if piece can move 'num' spaces right
+	 * (Should support any size rectangles)
+	 * 
+	 * @param gr Grid to check
+	 * @param val Value of piece in grid
+	 * @param x x coordinate in grid[x][y]
+	 * @param y y coordinate in grid[x][y]
+	 * @param num Number of spaces to attempt move right
+	 * @return True if valid, false otherwise
+	 */
 	private boolean canMoveRight(int[][] gr, int val, int x, int y, int num){
 		//assumes top left provided
 		//assumes lower "nums" checked
@@ -275,6 +368,18 @@ public class RushSolver extends Thread{
 		return true;//else can move, base case 2
 	}
 
+	/**
+	 * Provided the top left sector of the value 'val',
+	 * decides if piece can move 'num' spaces down
+	 * (Should support any size rectangles)
+	 * 
+	 * @param gr Grid to check
+	 * @param val Value of piece in grid
+	 * @param x x coordinate in grid[x][y]
+	 * @param y y coordinate in grid[x][y]
+	 * @param num Number of spaces to attempt move right
+	 * @return True if valid, false otherwise
+	 */
 	private boolean canMoveDown(int[][] gr, int val, int x, int y, int num){
 		//assumes top left provided
 		//assumes lower "nums" checked
@@ -305,7 +410,11 @@ public class RushSolver extends Thread{
 		return true;//else can't move, base case 2
 	}
 
-
+	/**
+	 * Check to see if GridState is a solution
+	 * and handle event as necessary
+	 * @param gr GridState to check
+	 */
 	private void checkIsSolution(GridState gr) {
 		int [][] grid = gr.getGrid();
 		//int lx = 0;
@@ -319,6 +428,17 @@ public class RushSolver extends Thread{
 		}
 	}
 
+	/**
+	 * Tries to move piece at 'val', who's top left
+	 * sector is at (x, y), as many steps as
+	 * possible starting from 1 towards the left
+	 * @param steps Steps to this state
+	 * @param gr Grid to try on
+	 * @param val Value of block to move
+	 * @param x xPos of block farthest left
+	 * @param y yPos of block farthest left
+	 * @param allowedDir Allowed range of motion
+	 */
 	private void tryMoveLeft(int steps, int[][] gr, int val, int x, int y, int allowedDir){
 		if (allowedDir == 1)//vert
 			return;
@@ -353,6 +473,17 @@ public class RushSolver extends Thread{
 		// move down to check width
 	}
 
+	/**
+	 * Tries to move piece at 'val', who's top left
+	 * sector is at (x, y), as many steps as
+	 * possible starting from 1 towards the right
+	 * @param steps Steps to this state
+	 * @param gr Grid to try on
+	 * @param val Value of block to move
+	 * @param x xPos of block farthest left
+	 * @param y yPos of block farthest left
+	 * @param allowedDir Allowed range of motion
+	 */
 	private void tryMoveRight(int steps, int[][] gr, int val, int x, int y, int allowedDir){
 		if (allowedDir == 1)
 			return;
@@ -386,6 +517,17 @@ public class RushSolver extends Thread{
 		// move down to check width
 	}
 
+	/**
+	 * Tries to move piece at 'val', who's top left
+	 * sector is at (x, y), as many steps as
+	 * possible starting from 1 upward
+	 * @param steps Steps to this state
+	 * @param gr Grid to try on
+	 * @param val Value of block to move
+	 * @param x xPos of block farthest left
+	 * @param y yPos of block farthest left
+	 * @param allowedDir Allowed range of motion
+	 */
 	private void tryMoveUp(int steps, int[][] gr, int val, int x, int y, int allowedDir){
 		if (allowedDir == 0)
 			return;
@@ -420,6 +562,17 @@ public class RushSolver extends Thread{
 		// move right to check width
 	}
 
+	/**
+	 * Tries to move piece at 'val', who's top left
+	 * sector is at (x, y), as many steps as
+	 * possible starting from 1 downward
+	 * @param steps Steps to this state
+	 * @param gr Grid to try on
+	 * @param val Value of block to move
+	 * @param x xPos of block farthest left
+	 * @param y yPos of block farthest left
+	 * @param allowedDir Allowed range of motion
+	 */
 	private void tryMoveDown(int steps, int[][] gr, int val, int x, int y, int allowedDir){
 		if (allowedDir == 0)
 			return;
@@ -453,6 +606,13 @@ public class RushSolver extends Thread{
 		// move right to check width
 	}
 
+	/**
+	 * Enumerates all possible moves
+	 * from the state gr
+	 * 
+	 * @param steps Steps to gr state
+	 * @param gr 2D array of 
+	 */
 	private void enumerate(int steps, int[][] gr) {
 		boolean [] indexIsDone = new boolean[dirsAllowed.length];//initializes to false
 		for (int i = 0; i < indexIsDone.length; ++i){

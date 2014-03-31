@@ -7,12 +7,21 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.*;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
 import logic.RushHourGame;
 import logic.Triple;
+
+/**
+ * Is the GUI for the game aspect of the 
+ * on the MainFrame
+ * 
+ * @author Shanon Mathai
+ * @author Mike Albanese
+ *
+ */
+@SuppressWarnings("serial")
 public class GamePanel extends JPanel implements MouseInputListener {
 
 	private int numCars = 4;
@@ -29,6 +38,13 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	private static int numMoves;
 	private static boolean gameRunning = true;
 
+	/**
+	 * Creates the GUI for the blocks to be put
+	 * 
+	 * @param w Width of this panel
+	 * @param h Height of this panel
+	 * @param g Game to attach to this GUI
+	 */
 	public GamePanel(int w, int h, RushHourGame g) {
 		super();
 		game = g;
@@ -46,7 +62,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {//arrow for hover?
+	public void mouseEntered(MouseEvent e) {
 
 	}
 
@@ -55,6 +71,11 @@ public class GamePanel extends JPanel implements MouseInputListener {
 
 	}
 
+	/**
+	 * Handles the initial click for the mouse
+	 * dragged
+	 * @param e MouseEvent for the location
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if(gameRunning){
@@ -128,6 +149,12 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		}
 	}
 
+	/**
+	 * Checks to see if point is on 
+	 * any CarRect
+	 * @param p Point to check
+	 * @return CarRect at point, or null if none exist at point
+	 */
 	private CarRect onCar(Point p){
 		for (CarRect t: cars){
 			if (t.contains(p))
@@ -136,6 +163,11 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		return null;
 	}
 
+	/**
+	 * Handles the mouse release when dragged
+	 * 
+	 * @param e MouseEvent for position
+	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if(gameRunning){
@@ -156,6 +188,12 @@ public class GamePanel extends JPanel implements MouseInputListener {
 
 		}
 	}
+	
+	/**
+	 * Draws the CarRects on the GUI
+	 * as well as grid lines
+	 * @param g Graphics component to draw on
+	 */
 	@Override
 	public void paint(Graphics g){
 		g.clearRect(0, 0, this.getWidth(), this.getHeight());
@@ -169,7 +207,11 @@ public class GamePanel extends JPanel implements MouseInputListener {
 		}
 	}
 
-
+	/**
+	 * While mouse is down, handles the drag 
+	 * events to update GUI
+	 * @param e MouseEvent for the position
+	 */
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (carPressed != null){
@@ -185,38 +227,74 @@ public class GamePanel extends JPanel implements MouseInputListener {
 
 	}
 
+	/**
+	 * Sets the CarRects of this GUI
+	 * after read in
+	 * @param crs CarRects to use
+	 */
 	public void setCars(ArrayList<CarRect> crs) {
 		cars = (CarRect[]) crs.toArray(new CarRect[0]);
 	}
 
+	/**
+	 * Get the tile width
+	 * @return Tile width in pixels
+	 */
 	public static int getTileWidth(){
 		return tileWidth;
 	}
 
+	/**
+	 * Sets the game running to false
+	 */
 	public static void stopGame(){
 		gameRunning=false;
 	}
 
+	/**
+	 * Get the tile height
+	 * @return Height of tile in pixels
+	 */
 	public static int getTileHeight(){
 		return tileHeight;
 	}
 
+	/**
+	 * Get the CarRects of this GUI
+	 * @return Array of the CarRects
+	 */
 	public CarRect[] getCars(){
 		return this.cars;
 	}
 
+	/**
+	 * Get the number of moves thus far
+	 * @return Number of moves
+	 */
 	public static int getNumMoves(){
 		return numMoves;
 	}
 
+	/**
+	 * Reset the number of moves
+	 */
 	public static void resetNumMoves(){
 		numMoves = 0;
 	}
 
+	/**
+	 * Set the tile width
+	 * @param width Width to set in pixels
+	 */
 	public static void setTileWidth(int width){
 		tileWidth = width;
 	}
 
+
+	/**
+	 * Set the tile height
+	 * @param height Height to set in pixels
+	 */
 	public static void setTileHeight(int height){
 		tileHeight = height;
 	}
