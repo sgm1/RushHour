@@ -7,3 +7,5 @@ Work Distribution:
 Mike prioritized the GUI, file reading, and grid initialization
 Shannon prioritized the solver, collision, and mouse movement
 Everything else was worked on together
+
+Submitted 3/30/14
