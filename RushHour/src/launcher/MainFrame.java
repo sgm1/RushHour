@@ -30,8 +30,9 @@ public class MainFrame extends JFrame implements Runnable{
 	private static int winHeight = 602;
 
 	private static JTextArea moveCounter;
+	private static JTextArea levelCounter;
 	private static ArrayList<CarRect> carlist = new ArrayList<CarRect>();
-	private static int numLevels = 6;
+	private static int numLevels = 12;
 	private static int levelCount = 1;
 	private static boolean closeGame = false;
 	private static int carsMade;
@@ -65,16 +66,7 @@ public class MainFrame extends JFrame implements Runnable{
 		setLayout(null);
 		GameMenu gm = new GameMenu(this);
 		setJMenuBar(gm);
-		if(levelCount<=numLevels)
-			readInLevel();
-		else{
-			resetLevels();
-			closeGame = true;//will be removed later on
-		}
-		if(closeGame){
-			setVisible(false);
-			dispose();
-		}
+		readInLevel();
 		setResizable(false);
 		getContentPane().setPreferredSize(size);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -87,6 +79,14 @@ public class MainFrame extends JFrame implements Runnable{
 		moveCounter.setBounds(632,20,80,20);
 		add(moveCounter);
 
+		levelCounter = new JTextArea();
+		levelCounter.setText("Level 1");
+		levelCounter.setBackground(this.getBackground());
+		levelCounter.setPreferredSize(new Dimension(80,20));
+		levelCounter.setEditable(false);
+		levelCounter.setBounds(642,301,80,20);
+		add(levelCounter);
+		
 		daGame = new RushHourGame(carlist);
 		add(daGame.getPanel());
 		daGame.getPanel().setBounds(10,10,602,602);
@@ -122,11 +122,10 @@ public class MainFrame extends JFrame implements Runnable{
 	private void readInLevel() {//read in from file and initialize grid/cars
 		BufferedReader br = null;
 		int lineCount = 0;
-		boolean skipLine = false;
 		carsMade = 0;
 		try {
 			//TODO put back the other one after levels added
-			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("proj3"+ (char)('a' + levelCount) +".data"));
+			InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("level"+ levelCount +".data"));
 			//InputStreamReader temp = new InputStreamReader(MainFrame.class.getResourceAsStream("level" + levelCount + ".data"));
 			String sCurrentLine;
 			br = new BufferedReader(temp);
@@ -148,7 +147,7 @@ public class MainFrame extends JFrame implements Runnable{
 			}
 
 			while ((sCurrentLine = br.readLine()) != null) {//get car dimensions and add to car list; first car in list will be the goal piece ('Z')
-				skipLine = false;//boolean to detect if we should add a car to the list or skip to the next line
+				boolean skipLine = false;//boolean to detect if we should add a car to the list or skip to the next line
 				String delims = "[ ]+";
 				String[] tokens = sCurrentLine.split(delims);
 				for(int i = 0; i<4 ; i++){
@@ -270,6 +269,7 @@ public class MainFrame extends JFrame implements Runnable{
 	 */
 	public static void setMoveCounter(int numMoves){//updates the move counter in the GUI
 		moveCounter.setText("Moves: " + numMoves);
+		levelCounter.setText("Level " + levelCount);
 	}
 
 	/**
@@ -278,12 +278,11 @@ public class MainFrame extends JFrame implements Runnable{
 	 */
 	public void newLevel(boolean reset){//read in the next level file and reset variables
 		if(!reset){
-			if(levelCount <= numLevels){//check if we've exhausted all our levels
+			if(levelCount < numLevels){//check if we've exhausted all our levels
 				levelCount++;
 			}
 			if (levelCount == numLevels){
 				resetLevels();
-				return;
 			}
 		}
 		this.remove(daGame.getPanel());
