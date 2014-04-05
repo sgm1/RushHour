@@ -10,4 +10,4 @@ Everything else was worked on together
 
 Submitted 3/30/14
 
-Software Design Document: https://docs.google.com/document/d/1OWogehu0E0eQfNq64m9xYNVUcddJ53akMB_NBZvqV3E/edit#
+Software Design Document: https://drive.google.com/file/d/0B4PaHPfmtFLtM1ktTVhkdWVFY1E/edit?usp=sharing
